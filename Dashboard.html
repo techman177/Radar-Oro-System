@@ -2,8 +2,8 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>RADAR DE ORO | MASTER ENGINE V10.0 ULTRA</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>RADAR DE ORO | MASTER ENGINE PRO</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Poppins:wght@300;400;600&family=Roboto+Mono:wght@400;700&display=swap" rel="stylesheet">
     <style>
@@ -12,219 +12,275 @@
             --card: #161b22; --success: #00ff88; --danger: #f85149; --blue: #00d4ff;
         }
 
-        body { 
-            margin: 0; background: var(--bg); color: #e6edf3; 
-            font-family: 'Poppins', sans-serif; display: flex; height: 100vh; overflow: hidden; 
-        }
-
-        /* SIDEBAR PRO */
-        .sidebar { 
-            width: 280px; background: var(--sidebar); border-right: 1px solid #30363d; 
-            display: flex; flex-direction: column; padding: 25px; 
-        }
-        .logo-box { 
-            font-family: 'Orbitron'; color: var(--gold); text-align: center; 
-            padding-bottom: 25px; border-bottom: 1px solid #333; margin-bottom: 25px;
-        }
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; margin: 0; padding: 0; }
         
-        /* PANEL DE BALANCE */
-        .balance-box {
-            background: rgba(0,0,0,0.4); border: 1px solid #333; padding: 15px;
-            border-radius: 12px; margin-bottom: 20px; font-family: 'Orbitron';
-        }
-        .bal-label { font-size: 0.5rem; color: #8b949e; display: block; }
-        .bal-val { font-size: 1.1rem; color: var(--success); }
-
-        .nav-link { 
-            padding: 12px; color: #8b949e; text-decoration: none; display: flex; 
-            align-items: center; gap: 12px; font-size: 0.8rem; border-radius: 8px; 
-            margin-bottom: 8px; cursor: pointer; transition: 0.3s;
-        }
-        .nav-link:hover, .nav-link.active { background: rgba(252,194,0,0.1); color: var(--gold); }
-
-        /* MAIN CONTENT */
-        .main { flex: 1; padding: 20px; overflow-y: auto; display: flex; flex-direction: column; gap: 15px; }
-
-        .top-row { display: grid; grid-template-columns: 2fr 1fr; gap: 15px; }
-
-        /* CONSOLA IA */
-        .console { 
-            background: #000; border: 1px solid #333; padding: 15px; 
-            font-family: 'Roboto Mono'; font-size: 0.65rem; color: var(--success); 
-            height: 100px; overflow: hidden; border-radius: 12px;
+        body, html { 
+            height: 100%; width: 100%;
+            background: var(--bg); color: #e6edf3; font-family: 'Poppins', sans-serif;
+            overflow: hidden; 
         }
 
-        /* CHARTS COMPACTOS */
-        .charts-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; height: 380px; }
-        .chart-card { background: #000; border: 1px solid #333; border-radius: 15px; display: flex; flex-direction: column; padding: 8px; }
-        .chart-info { display: flex; justify-content: space-between; font-size: 0.6rem; color: var(--gold); padding: 5px; font-family: 'Orbitron'; }
-        iframe { width: 100%; flex: 1; border: none; border-radius: 10px; }
+        .app-wrapper { display: flex; height: 100vh; width: 100vw; }
 
-        /* TRADING PANEL */
-        .trading-panel {
-            background: var(--card); border: 1px solid #333; padding: 20px;
-            border-radius: 20px; display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; align-items: center;
+        /* PANEL DE CONTROL */
+        .control-panel { 
+            width: 360px; background: var(--sidebar); border-right: 1px solid #30363d; 
+            display: flex; flex-direction: column; padding: 15px; z-index: 100;
+            overflow-y: auto;
         }
-        .lot-selector { background: #000; border: 1px solid #444; color: white; padding: 10px; border-radius: 8px; font-family: 'Orbitron'; text-align: center; }
+
+        .chart-container { flex: 1; background: #000; position: relative; }
+
+        .brand { font-family: 'Orbitron'; color: var(--gold); text-align: center; font-size: 1.1rem; margin-bottom: 12px; letter-spacing: 2px; }
         
-        .btn { padding: 15px; border-radius: 10px; border: none; font-family: 'Orbitron'; font-weight: bold; cursor: pointer; transition: 0.2s; }
+        /* BOTÓN DE PODER (ON/OFF) */
+        .power-switch {
+            display: flex; align-items: center; justify-content: center;
+            background: rgba(255,255,255,0.05); padding: 10px; border-radius: 12px;
+            margin-bottom: 15px; cursor: pointer; border: 1px solid #333; transition: 0.3s;
+        }
+        .power-active { border-color: var(--success); box-shadow: 0 0 15px rgba(0,255,136,0.2); }
+        .power-label { font-family: 'Orbitron'; font-size: 0.7rem; margin-left: 10px; }
+
+        /* ESTADÍSTICAS */
+        .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 12px; }
+        .stat-item { background: var(--card); padding: 10px; border-radius: 8px; border: 1px solid #333; text-align: center; }
+        .stat-label { font-size: 0.5rem; color: #8b949e; font-family: 'Orbitron'; display: block; }
+        .stat-value { font-family: 'Orbitron'; font-size: 0.9rem; font-weight: bold; }
+
+        /* CONSOLA DE IA */
+        .ai-console { 
+            background: rgba(0,0,0,0.8); border: 1px solid #333; padding: 8px; 
+            font-family: 'Roboto Mono', monospace; font-size: 0.6rem; color: var(--success); 
+            height: 70px; border-radius: 6px; margin-bottom: 12px;
+            display: flex; flex-direction: column-reverse; overflow: hidden;
+        }
+
+        /* MONITOR DE OPERACIONES */
+        .trades-monitor { 
+            background: #000; border: 1px solid #222; border-radius: 8px; 
+            margin-bottom: 12px; padding: 10px; flex-grow: 1; overflow-y: auto;
+            min-height: 100px;
+        }
+        .trade-row { 
+            display: flex; justify-content: space-between; font-size: 0.7rem; 
+            font-family: 'Roboto Mono'; padding: 6px 0; border-bottom: 1px solid #111;
+        }
+
+        /* MÓDULO DE TRADING */
+        .trading-module { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+        .lot-selector { grid-column: span 2; display: flex; align-items: center; justify-content: space-between; background: #000; padding: 8px; border-radius: 8px; border: 1px solid #444; }
+        .lot-input { background: none; border: none; color: white; font-family: 'Orbitron'; width: 60px; text-align: center; outline: none; font-size: 0.9rem; }
+
+        .pair-selector { grid-column: span 2; background: #333; color: white; border: none; padding: 8px; border-radius: 8px; font-family: 'Orbitron'; font-size: 0.7rem; margin: 5px 0; }
+
+        .btn { 
+            padding: 12px; border-radius: 8px; border: none; font-family: 'Orbitron'; 
+            font-weight: bold; cursor: pointer; font-size: 0.7rem; transition: 0.2s;
+            display: flex; align-items: center; justify-content: center; gap: 5px;
+        }
         .btn-buy { background: var(--success); color: #000; }
         .btn-sell { background: var(--danger); color: #fff; }
-        .btn-close { background: #333; color: #fff; }
-        .btn:hover { transform: scale(1.02); filter: brightness(1.2); }
+        .btn-shield { grid-column: span 2; background: rgba(0,212,255,0.1); color: var(--blue); border: 1px solid var(--blue); margin-top: 5px; }
+        .btn-close { grid-column: span 2; background: #222; color: #777; margin-top: 5px; font-size: 0.6rem; }
 
-        /* MT5 OVERLAY */
-        #mt5Lock { 
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
-            background: rgba(0,0,0,0.98); z-index: 5000; display: flex; justify-content: center; align-items: center; 
+        /* RESPONSIVO PARA IPHONE Y CELULARES */
+        @media (max-width: 850px) {
+            .app-wrapper { flex-direction: column; }
+            .control-panel { width: 100%; height: 55%; border-right: none; border-bottom: 1px solid #30363d; padding: 10px; }
+            .chart-container { height: 45%; }
+            .brand { font-size: 0.9rem; margin-bottom: 5px; }
+            .stats-grid { margin-bottom: 5px; }
+            .trades-monitor { min-height: 70px; }
         }
-        .modal { 
-            background: var(--card); padding: 40px; border-radius: 25px; 
-            border: 1px solid var(--gold); text-align: center; width: 350px; 
-        }
-        .modal input { width: 100%; padding: 12px; margin-bottom: 10px; background: #000; border: 1px solid #333; color: white; border-radius: 8px; text-align: center; }
 
-        /* NOTIFICACIONES */
-        #toast {
-            position: fixed; bottom: 20px; right: 20px; background: #161b22;
-            border-left: 5px solid var(--gold); padding: 15px 25px; border-radius: 8px;
-            display: none; z-index: 6000; font-size: 0.8rem; box-shadow: 0 10px 30px #000;
-        }
+        iframe { width: 100%; height: 100%; border: none; }
+        .active-glow { animation: glow 1.5s infinite alternate; }
+        @keyframes glow { from { text-shadow: 0 0 5px var(--success); } to { text-shadow: 0 0 15px var(--success); } }
     </style>
 </head>
 <body>
 
-    <div id="mt5Lock">
-        <div class="modal">
-            <i class="fas fa-terminal" style="color: var(--gold); font-size: 2.5rem; margin-bottom: 15px;"></i>
-            <h2 style="font-family: 'Orbitron'; font-size: 1rem;">MT5 CORE SYNC</h2>
-            <input type="text" id="mID" placeholder="NRO CUENTA MT5">
-            <input type="password" id="mPW" placeholder="MASTER PASSWORD">
-            <button class="btn btn-buy" style="width: 100%;" onclick="connect()">VINCULAR TERMINAL</button>
-        </div>
-    </div>
+    <audio id="successSound" src="https://assets.mixkit.co/active_storage/sfx/2017/2017-preview.mp3"></audio>
 
-    <div id="toast"></div>
+    <div class="app-wrapper">
+        <aside class="control-panel">
+            <div class="brand">MASTER RADAR V10</div>
 
-    <div class="sidebar">
-        <div class="logo-box">MASTER ENGINE</div>
-        
-        <div class="balance-box">
-            <span class="bal-label">BALANCE (USD)</span>
-            <div class="bal-val" id="bal">--</div>
-            <span class="bal-label" style="margin-top:10px">EQUIDAD</span>
-            <div class="bal-val" id="equ" style="color: var(--blue);">--</div>
-        </div>
-
-        <nav style="flex:1">
-            <div class="nav-link active"><i class="fas fa-microchip"></i> Neural Core V10</div>
-            <div class="nav-link" id="alBtn" onclick="toggleAL()"><i class="fas fa-shield-alt"></i> ANTI-LOSS: <span id="alSt">OFF</span></div>
-            <div class="nav-link" onclick="window.open('https://www.exness.com/', '_blank')"><i class="fas fa-external-link-alt"></i> Broker Exness</div>
-        </nav>
-
-        <div class="nav-link" onclick="logout()" style="color: var(--danger);"><i class="fas fa-power-off"></i> SALIR DEL SISTEMA</div>
-    </div>
-
-    <div class="main">
-        <div class="top-row">
-            <div class="console" id="logs">> Esperando conexión con el servidor maestro...</div>
-            <div class="stat-card" style="display:flex; flex-direction:column; justify-content:center; padding:10px;">
-                <span class="stat-label">FUERZA DEL ORO</span>
-                <div class="stat-val" id="gStr" style="color: var(--success);">0.00%</div>
+            <div class="power-switch" id="powerBtn" onclick="togglePower()">
+                <i id="pIcon" class="fas fa-power-off" style="color: #555;"></i>
+                <span class="power-label" id="pLabel">SISTEMA: APAGADO</span>
             </div>
-        </div>
 
-        <div class="charts-grid">
-            <div class="chart-card">
-                <div class="chart-info"><span>XAUUSD.PRO</span><span id="pGold">--</span></div>
-                <iframe src="https://s.tradingview.com/widgetembed/?symbol=OANDA%3AXAUUSD&theme=dark&style=1&interval=1"></iframe>
+            <div class="stats-grid">
+                <div class="stat-item">
+                    <span class="stat-label">BALANCE (USD)</span>
+                    <span class="stat-value" id="balanceShow" style="color: var(--success); font-size: 1rem;">$5,420.00</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">BENEFICIO</span>
+                    <span class="stat-value" id="profitShow">$0.00</span>
+                </div>
             </div>
-            <div class="chart-card">
-                <div class="chart-info"><span>EURUSD.PRO</span><span id="pEur">--</span></div>
-                <iframe src="https://s.tradingview.com/widgetembed/?symbol=FX%3AEURUSD&theme=dark&style=1&interval=1"></iframe>
-            </div>
-        </div>
 
-        <div class="trading-panel">
-            <div style="display:flex; flex-direction:column;">
-                <span class="stat-label">LOT SIZE</span>
-                <select class="lot-selector" id="lot">
-                    <option>0.01</option>
-                    <option selected>0.10</option>
-                    <option>1.00</option>
+            <div class="ai-console" id="logs">
+                <div>> Radar en modo Standby...</div>
+            </div>
+
+            <div class="trades-monitor" id="tradeBox">
+                <div style="color: #333; font-size: 0.5rem; text-align: center; margin-top: 20px;">SISTEMA OFFLINE</div>
+            </div>
+
+            <div class="trading-module">
+                <select class="pair-selector" id="assetSelect" onchange="changeAsset()">
+                    <option value="XAUUSD">ACTIVO: XAUUSD (ORO)</option>
+                    <option value="EURUSD">ACTIVO: EURUSD (EURO)</option>
                 </select>
+
+                <div class="lot-selector">
+                    <span class="stat-label">LOTS:</span>
+                    <input type="number" step="0.01" value="0.10" class="lot-input" id="lots">
+                </div>
+
+                <button class="btn btn-buy" onclick="executeOrder('BUY')"><i class="fas fa-arrow-up"></i> COMPRA</button>
+                <button class="btn btn-sell" onclick="executeOrder('SELL')"><i class="fas fa-arrow-down"></i> VENTA</button>
+                
+                <button class="btn btn-shield" id="shieldBtn" onclick="toggleShield()">
+                    <i class="fas fa-shield-alt"></i> NEURAL SHIELD: <span id="shieldSt">OFF</span>
+                </button>
+                
+                <button class="btn btn-close" onclick="closeAll()">CERRAR OPERACIONES</button>
             </div>
-            <button class="btn btn-buy" onclick="trade('BUY')">BUY / COMPRA</button>
-            <button class="btn btn-sell" onclick="trade('SELL')">SELL / VENTA</button>
-            <button class="btn btn-close" onclick="trade('CLOSE')">CLOSE ALL</button>
-        </div>
+        </aside>
+
+        <main class="chart-container" id="chartArea">
+            <iframe id="tvChart" src="https://s.tradingview.com/widgetembed/?symbol=OANDA%3AXAUUSD&theme=dark&style=1&interval=1&hidesidetoolbar=1"></iframe>
+        </main>
     </div>
 
     <script>
-        let live = false;
-        let al = false;
-
         // SEGURIDAD
-        (function(){
-            if(!localStorage.getItem("master_access")) window.location.href="index.html";
-        })();
+        if (localStorage.getItem("master_access") !== "true") { window.location.href = "index.html"; }
 
-        function logout() {
-            localStorage.clear();
-            window.location.href="index.html";
+        let botRunning = false;
+        let shieldOn = false;
+        let orders = [];
+        let baseBal = 5420.00;
+        const sound = document.getElementById('successSound');
+
+        function togglePower() {
+            botRunning = !botRunning;
+            const btn = document.getElementById('powerBtn');
+            const icon = document.getElementById('pIcon');
+            const label = document.getElementById('pLabel');
+            
+            if(botRunning) {
+                btn.classList.add('power-active');
+                icon.style.color = "var(--success)";
+                label.innerText = "SISTEMA: OPERANDO";
+                addLog("> IA: Neural Core inicializado exitosamente.");
+                refreshUI();
+            } else {
+                btn.classList.remove('power-active');
+                icon.style.color = "#555";
+                label.innerText = "SISTEMA: APAGADO";
+                addLog("> IA: Sistema en pausa.");
+                closeAll();
+            }
         }
 
-        function toggleAL() {
-            al = !al;
-            document.getElementById('alBtn').style.borderColor = al ? "var(--success)" : "transparent";
-            document.getElementById('alSt').innerText = al ? "ACTIVO" : "OFF";
-            toast(al ? "ESCUDO ANTI-LOSS VINCULADO" : "PROTECCIÓN REMOVIDA");
+        function toggleShield() {
+            if(!botRunning) return alert("Enciende el sistema primero");
+            shieldOn = !shieldOn;
+            document.getElementById('shieldSt').innerText = shieldOn ? "ACTIVE" : "OFF";
+            document.getElementById('shieldBtn').style.color = shieldOn ? "var(--success)" : "var(--blue)";
+            addLog(shieldOn ? "> IA: Escudo Anti-Loss activado (Máxima protección)." : "> IA: Escudo desactivado.");
         }
 
-        function toast(m) {
-            const t = document.getElementById('toast');
-            t.innerHTML = `<b>IA NOTIFICACIÓN:</b><br>${m}`;
-            t.style.display = 'block';
-            setTimeout(()=> t.style.display='none', 3000);
+        function changeAsset() {
+            const asset = document.getElementById('assetSelect').value;
+            const chart = document.getElementById('tvChart');
+            chart.src = `https://s.tradingview.com/widgetembed/?symbol=OANDA%3A${asset}&theme=dark&style=1&interval=1&hidesidetoolbar=1`;
+            addLog(`> IA: Cambiando análisis a ${asset}`);
         }
 
-        function connect() {
-            if(document.getElementById('mID').value.length < 4) return alert("Error de ID");
-            document.getElementById('mt5Lock').style.display = 'none';
-            live = true;
-            toast("CONEXIÓN EXITOSA CON MT5");
-            loop();
+        function executeOrder(type) {
+            if(!botRunning) return alert("Activa el bot para operar.");
+            const lot = document.getElementById('lots').value;
+            const id = Math.floor(Math.random()*1000);
+            orders.push({ id, type, lot, profit: 0 });
+            addLog(`> ORDEN ${type} ACEPTADA (ID: ${id})`);
+            refreshUI();
         }
 
-        function trade(t) {
-            if(!live) return;
-            const log = document.getElementById('logs');
+        function closeAll() {
+            orders = [];
+            refreshUI();
+            document.getElementById('profitShow').innerText = "$0.00";
+            document.getElementById('profitShow').style.color = "white";
+        }
+
+        function refreshUI() {
+            const box = document.getElementById('tradeBox');
+            if(orders.length === 0) {
+                box.innerHTML = `<div style="color:#333; font-size:0.5rem; text-align:center; margin-top:20px;">${botRunning ? 'BUSCANDO ENTRADAS...' : 'SISTEMA OFFLINE'}</div>`;
+                return;
+            }
+            box.innerHTML = orders.map(o => `
+                <div class="trade-row">
+                    <span style="color:${o.type==='BUY'?'var(--success)':'var(--danger)'}">${o.type} ${o.lot}</span>
+                    <span id="p-${o.id}" style="color:var(--success)">$${o.profit.toFixed(2)}</span>
+                </div>
+            `).join('');
+        }
+
+        function addLog(t) {
+            const l = document.getElementById('logs');
             const d = document.createElement('div');
-            const lot = document.getElementById('lot').value;
-            d.innerHTML = `> [${new Date().toLocaleTimeString()}] ORDEN ${t} ENVIADA | LOT: ${lot} | ESTADO: OK`;
-            d.style.color = t === 'BUY' ? 'var(--success)' : (t === 'SELL' ? 'var(--danger)' : '#fff');
-            log.prepend(d);
-            toast(`ORDEN ${t} EJECUTADA`);
+            d.innerText = t;
+            l.prepend(d);
+            if(l.childNodes.length > 10) l.removeChild(l.lastChild);
         }
 
-        function loop() {
-            setInterval(() => {
-                // Simulación de Precios y Balance
-                const gold = (2000 + Math.random()*50).toFixed(2);
-                const eur = (1.08 + Math.random()*0.01).toFixed(4);
-                const balance = (5420 + Math.random()*10).toFixed(2);
+        // MOTOR DE MERCADO CON SONIDO DE ÉXITO
+        setInterval(() => {
+            if(!botRunning) return;
+            let total = 0;
+            orders.forEach(o => {
+                // Mejora del bot: Si el shield está ON, la probabilidad de ganancia sube
+                let move = (Math.random() * 4 - 1.8);
+                if(shieldOn && move < 0) move = move * 0.4; // Reduce pérdidas si el escudo está ON
                 
-                document.getElementById('pGold').innerText = gold;
-                document.getElementById('pEur').innerText = eur;
-                document.getElementById('bal').innerText = "$" + balance;
-                document.getElementById('equ').innerText = "$" + (parseFloat(balance) + 140).toFixed(2);
-                document.getElementById('gStr').innerText = (Math.random()*100).toFixed(2) + "%";
+                o.profit += move;
+                total += o.profit;
 
-                const l = document.createElement('div');
-                l.innerText = "> IA analizando liquidez en pool de Exness...";
-                document.getElementById('logs').prepend(l);
-            }, 3000);
-        }
+                // Sonido si una operación supera los $10 de ganancia de repente (acierto)
+                if(move > 2.5) {
+                    sound.currentTime = 0;
+                    sound.play().catch(e => {}); // Play sound
+                }
+
+                const el = document.getElementById(`p-${o.id}`);
+                if(el) {
+                    el.innerText = `$${o.profit.toFixed(2)}`;
+                    el.style.color = o.profit >= 0 ? "var(--success)" : "var(--danger)";
+                }
+            });
+
+            if(orders.length > 0) {
+                const pShow = document.getElementById('profitShow');
+                pShow.innerText = (total >= 0 ? "+" : "") + `$${total.toFixed(2)}`;
+                pShow.style.color = total >= 0 ? "var(--success)" : "var(--danger)";
+                document.getElementById('balanceShow').innerText = `$${(baseBal + total).toFixed(2)}`;
+            }
+        }, 2000);
+
+        // LOGS IA
+        setInterval(() => {
+            if(!botRunning) return;
+            const m = ["> IA: Escaneando liquidez...", "> IA: Algoritmo ajustando Take Profit", "> IA: Confirmando tendencia H1", "> IA: Señal detectada en zona premium"];
+            addLog(m[Math.floor(Math.random()*m.length)]);
+        }, 8000);
     </script>
 </body>
 </html>
