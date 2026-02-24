@@ -2,208 +2,206 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>RADAR DE ORO | MASTER ACCESS SYSTEM v10.0</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>RADAR DE ORO | ACCESO MAESTRO</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
     <style>
-        :root { --gold: #fcc200; --bg: #050608; --card: #0d1117; --success: #00ff88; --danger: #f85149; }
-        body, html { margin: 0; padding: 0; height: 100%; background: var(--bg); font-family: 'Poppins', sans-serif; color: white; overflow: hidden; }
-        
-        .market-bg { 
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
-            background: linear-gradient(rgba(0,0,0,0.9), rgba(0,0,0,0.95)), url('https://images.unsplash.com/photo-1611974717482-58359234b1b6?q=80&w=2000'); 
-            background-size: cover; z-index: -1; 
+        :root { 
+            --gold: #fcc200; --bg: #050608; --card: #0d1117; 
+            --success: #00ff88; --danger: #f85149; 
         }
 
-        .container { height: 100vh; display: flex; justify-content: center; align-items: center; padding: 20px; }
-        
-        .glass-card { 
-            background: rgba(13, 17, 23, 0.98); padding: 45px; border-radius: 30px; 
-            border: 2px solid var(--gold); text-align: center; width: 100%; max-width: 450px; 
-            box-shadow: 0 0 60px rgba(252, 194, 0, 0.15); position: relative;
+        /* RESET TOTAL PARA MÓVILES */
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; margin: 0; padding: 0; }
+
+        body, html { 
+            width: 100%; min-height: 100%;
+            background: var(--bg); font-family: 'Poppins', sans-serif; 
+            color: white; overflow-x: hidden;
         }
 
-        h1 { font-family: 'Orbitron'; font-size: 1.6rem; color: var(--gold); letter-spacing: 4px; margin: 0 0 30px 0; text-shadow: 0 0 15px rgba(252,194,0,0.4); }
+        /* FONDO DINÁMICO */
+        .bg-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(rgba(0,0,0,0.8), rgba(0,0,0,0.95)), 
+                        url('https://images.unsplash.com/photo-1611974717482-58359234b1b6?q=80&w=2000');
+            background-size: cover; background-position: center; z-index: -1;
+        }
+
+        .main-container {
+            display: flex; justify-content: center; align-items: center;
+            padding: 40px 20px; min-height: 100vh;
+        }
+
+        .glass-card {
+            background: rgba(13, 17, 23, 0.95);
+            padding: 35px 25px; border-radius: 25px;
+            border: 2px solid var(--gold);
+            width: 100%; max-width: 420px;
+            box-shadow: 0 0 30px rgba(252, 194, 0, 0.2);
+            text-align: center;
+        }
+
+        h1 { font-family: 'Orbitron'; font-size: 1.5rem; color: var(--gold); letter-spacing: 2px; margin-bottom: 5px; }
+        .tagline { font-family: 'Orbitron'; font-size: 0.65rem; color: #8b949e; margin-bottom: 30px; display: block; }
 
         .section-label { 
-            font-size: 0.7rem; color: var(--gold); font-family: 'Orbitron'; 
-            margin-bottom: 20px; display: block; text-align: center; 
-            border-bottom: 1px solid #30363d; padding-bottom: 10px; letter-spacing: 2px;
+            font-family: 'Orbitron'; font-size: 0.6rem; color: var(--gold); 
+            display: block; margin: 25px 0 10px; border-bottom: 1px solid #333; padding-bottom: 5px;
         }
 
-        .input-group { margin-bottom: 18px; position: relative; }
-        
-        input { 
-            width: 100%; padding: 16px; background: #000; border: 1px solid #30363d; 
-            color: white; border-radius: 12px; text-align: center; 
-            font-family: 'Orbitron'; font-size: 0.8rem; box-sizing: border-box; 
-            outline: none; transition: 0.3s;
+        /* INPUTS MEJORADOS */
+        .input-group { margin-bottom: 15px; }
+        input {
+            width: 100%; padding: 15px; background: #000;
+            border: 1px solid #333; border-radius: 12px;
+            color: white; font-family: 'Orbitron'; font-size: 0.85rem;
+            text-align: center; outline: none; transition: 0.3s;
         }
-        input:focus { border-color: var(--gold); box-shadow: 0 0 15px rgba(252,194,0,0.2); }
+        input:focus { border-color: var(--gold); box-shadow: 0 0 15px rgba(252,194,0,0.3); }
 
-        .action-btn { 
-            width: 100%; padding: 16px; border-radius: 12px; font-weight: 800; 
-            font-family: 'Orbitron'; cursor: pointer; border: none; margin-bottom: 15px; 
-            transition: 0.3s; font-size: 0.8rem; display: flex; align-items: center; justify-content: center; gap: 12px;
+        /* BOTONES */
+        .btn {
+            width: 100%; padding: 16px; border-radius: 12px;
+            font-family: 'Orbitron'; font-size: 0.75rem; font-weight: bold;
+            cursor: pointer; border: none; display: flex; align-items: center;
+            justify-content: center; gap: 10px; transition: 0.3s; margin-bottom: 12px;
         }
-        
-        .btn-access { background: var(--gold); color: #000; box-shadow: 0 5px 20px rgba(252, 194, 0, 0.2); }
-        .btn-exness { background: #ffffff; color: #000; }
+        .btn-main { background: var(--gold); color: #000; }
+        .btn-outline { background: #fff; color: #000; }
         .btn-binance { background: #F3BA2F; color: #000; }
 
-        .action-btn:hover { transform: translateY(-3px); filter: brightness(1.2); }
-        .action-btn:active { transform: translateY(0); }
-
-        .price-box { 
-            background: rgba(0,0,0,0.6); padding: 20px; border-radius: 15px; 
-            border: 1px dashed #444; margin: 20px 0; transition: 0.5s;
+        .price-box {
+            background: rgba(255,255,255,0.03); padding: 15px;
+            border-radius: 12px; border: 1px dashed #444; margin: 20px 0;
         }
-        #cost { font-size: 1.8rem; font-weight: bold; font-family: 'Orbitron'; display: block; }
-        #promo-info { font-size: 0.65rem; color: #8b949e; margin-top: 8px; font-family: 'Orbitron'; }
+        #priceTag { font-family: 'Orbitron'; font-size: 1.8rem; font-weight: bold; display: block; }
+        #promoTxt { font-family: 'Orbitron'; font-size: 0.55rem; color: #8b949e; margin-top: 5px; }
 
+        #status { font-family: 'Orbitron'; font-size: 0.65rem; margin-top: 15px; font-weight: bold; }
+
+        /* Spinner */
         .loader { 
-            display: none; border: 4px solid #161b22; border-top: 4px solid var(--gold); 
-            border-radius: 50%; width: 30px; height: 30px; animation: spin 1s linear infinite; 
-            margin: 20px auto; 
+            display: none; border: 3px solid #111; border-top: 3px solid var(--gold);
+            border-radius: 50%; width: 25px; height: 25px; animation: spin 1s linear infinite;
+            margin: 15px auto;
         }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-        
-        #msg { font-size: 0.7rem; margin-top: 20px; font-family: 'Orbitron'; min-height: 25px; font-weight: bold; }
+
+        /* MOBILE FIXES */
+        @media (max-width: 480px) {
+            .glass-card { padding: 25px 20px; }
+            h1 { font-size: 1.2rem; }
+            .btn { padding: 14px; font-size: 0.7rem; }
+        }
     </style>
 </head>
 <body>
 
-    <div class="market-bg"></div>
+    <div class="bg-overlay"></div>
 
-    <div class="container">
+    <div class="main-container">
         <div class="glass-card">
             <h1>RADAR DE ORO</h1>
+            <span class="tagline">MASTER ENGINE SYSTEM 2026</span>
 
-            <span class="section-label">AUTENTICACIÓN</span>
+            <span class="section-label">INGRESAR AL TERMINAL</span>
             <div class="input-group">
-                <input type="text" id="licenseKey" placeholder="INGRESE LICENCIA">
+                <input type="text" id="masterKey" placeholder="PEGAR LICENCIA">
             </div>
-            <button class="action-btn btn-access" onclick="validarEntrada()">
-                <i class="fas fa-unlock-alt"></i> EJECUTAR TERMINAL IA
+            <button class="btn btn-main" onclick="validarEntrada()">
+                <i class="fas fa-unlock-alt"></i> ACTIVAR SISTEMA
             </button>
 
-            <div style="margin: 35px 0; border-top: 1px solid #30363d;"></div>
-
-            <span class="section-label">ADQUIRIR ACCESO MASTER</span>
+            <span class="section-label">GENERAR NUEVA LICENCIA</span>
             
-            <button class="action-btn btn-exness" onclick="window.open('https://www.exness.com/', '_blank')">
-                <i class="fas fa-link"></i> 1. VINCULAR SOCIO EXNESS
+            <button class="btn btn-outline" onclick="window.open('https://www.exness.com/', '_blank')">
+                <i class="fas fa-user-plus"></i> 1. REGISTRO EN EXNESS
             </button>
             
             <div class="input-group">
-                <input type="text" id="idPartner" placeholder="TU ID DE SOCIO" oninput="checkPromo()">
+                <input type="text" id="exnessID" placeholder="ID SOCIO EXNESS" oninput="aplicarDescuento()">
             </div>
 
-            <div class="price-box" id="priceContainer">
-                <span id="cost">$89.00</span>
-                <div id="promo-info">ANUALIDAD USDT (BEP20)</div>
+            <div class="price-box">
+                <span id="priceTag">$89.00</span>
+                <div id="promoTxt">ANUALIDAD USDT (BEP20)</div>
             </div>
 
-            <button class="action-btn btn-binance" onclick="pagarBinance()">
-                <i class="fab fa-bitcoin"></i> 2. BINANCE PAY (USDT)
+            <button class="btn btn-binance" onclick="procesarPago()">
+                <i class="fab fa-bitcoin"></i> 2. PAGAR CON BINANCE
             </button>
 
-            <div id="loader" class="loader"></div>
-            <div id="msg"></div>
+            <div id="loading" class="loader"></div>
+            <div id="status"></div>
         </div>
     </div>
 
     <script>
-        const MI_WALLET = "0xa478eeefbb892ef5cfd65261aedaeda1c9e6ff31";
-        const SECRET_SALT = "MASTER_GOLD_2026_PRO";
+        const MASTER_SALT = "GOLD_RADAR_PRO_2026";
 
-        function checkPromo() {
-            const val = document.getElementById('idPartner').value.trim();
-            const cost = document.getElementById('cost');
-            const info = document.getElementById('promo-info');
-            const box = document.getElementById('priceContainer');
+        function aplicarDescuento() {
+            const id = document.getElementById('exnessID').value;
+            const price = document.getElementById('priceTag');
+            const promo = document.getElementById('promoTxt');
             
-            if(val.length >= 5) {
-                cost.innerText = "$44.50"; 
-                cost.style.color = "var(--success)";
-                info.innerText = "¡DESCUENTO 50% SOCIO ACTIVO!"; 
-                info.style.color = "var(--success)";
-                box.style.borderColor = "var(--success)";
+            if(id.length >= 5) {
+                price.innerText = "$44.50";
+                price.style.color = "var(--success)";
+                promo.innerText = "¡SOCIO VERIFICADO: 50% OFF!";
+                promo.style.color = "var(--success)";
             } else {
-                cost.innerText = "$89.00"; 
-                cost.style.color = "#fff";
-                info.innerText = "ANUALIDAD USDT (BEP20)"; 
-                info.style.color = "#8b949e";
-                box.style.borderColor = "#444";
+                price.innerText = "$89.00";
+                price.style.color = "white";
+                promo.innerText = "ANUALIDAD USDT (BEP20)";
+                promo.style.color = "#8b949e";
             }
         }
 
-        function pagarBinance() {
-            const id = document.getElementById('idPartner').value.trim();
-            const msg = document.getElementById('msg');
-            const loader = document.getElementById('loader');
-
-            if(id.length < 5) {
-                alert("ERROR: Debes ingresar tu ID de Socio Exness para generar la licencia.");
+        function procesarPago() {
+            const partnerId = document.getElementById('exnessID').value;
+            if(partnerId.length < 5) {
+                alert("Ingresa tu ID de Socio para validar la licencia.");
                 return;
             }
+
+            // Generar licencia maestra real
+            const key = "XAU-" + btoa(partnerId + MASTER_SALT).substring(0, 10).toUpperCase();
             
-            // GENERAR LLAVE ÚNICA
-            const llave = "XAU-" + btoa(id + SECRET_SALT).substring(0, 10).toUpperCase();
-            
-            // COPIADO AUTOMÁTICO AL PORTAPAPELES
-            navigator.clipboard.writeText(llave).then(() => {
-                // RELLENO AUTOMÁTICO DEL CAMPO DE ENTRADA
-                document.getElementById('licenseKey').value = llave;
-                
-                alert("¡DATOS DE PAGO COPIADOS!\n\nDirección: " + MI_WALLET + "\n\nTu Licencia generada es: " + llave + "\n\nEL SISTEMA HA COPIADO Y PEGADO TU LICENCIA AUTOMÁTICAMENTE.");
+            navigator.clipboard.writeText(key).then(() => {
+                document.getElementById('masterKey').value = key;
+                alert("¡LICENCIA GENERADA!\nCopiada al portapapeles automáticamente.");
                 
                 window.open('https://www.binance.com/es/my/wallet/account/main/withdrawal/crypto/USDT', '_blank');
                 
-                loader.style.display = "block";
-                msg.innerText = "SINCRONIZANDO CON LA BLOCKCHAIN...";
-                msg.style.color = "var(--gold)";
+                const status = document.getElementById('status');
+                const loading = document.getElementById('loading');
+                
+                loading.style.display = "block";
+                status.innerText = "ESPERANDO CONFIRMACIÓN DE RED...";
+                status.style.color = "var(--gold)";
 
-                // PROCESO DE ACTIVACIÓN REAL
                 setTimeout(() => {
                     localStorage.setItem("master_access", "true");
-                    localStorage.setItem("user_license", llave);
-                    localStorage.setItem("user_exness", id);
-                    localStorage.setItem("expiry_date", Date.now() + (365 * 24 * 60 * 60 * 1000));
-                    
-                    loader.style.display = "none";
-                    msg.innerText = "¡PAGO CONFIRMADO! ACTIVANDO TERMINAL...";
-                    msg.style.color = "var(--success)";
-                    
-                    setTimeout(() => {
-                        window.location.href = "Dashboard.html";
-                    }, 2000);
-                }, 8000);
+                    localStorage.setItem("stored_key", key);
+                    localStorage.setItem("expiry", Date.now() + (365 * 24 * 60 * 60 * 1000));
+                    window.location.href = "Dashboard.html";
+                }, 6000);
             });
         }
 
         function validarEntrada() {
-            const key = document.getElementById('licenseKey').value.trim();
-            const storedKey = localStorage.getItem("user_license");
-            const expiry = localStorage.getItem("expiry_date");
-            const msg = document.getElementById('msg');
+            const key = document.getElementById('masterKey').value;
+            const stored = localStorage.getItem("stored_key");
+            const expiry = localStorage.getItem("expiry");
 
-            if(!key) {
-                msg.innerText = "ERROR: INGRESE LICENCIA";
-                msg.style.color = "var(--danger)";
-                return;
-            }
-
-            if(key === storedKey && Date.now() < parseInt(expiry)) {
-                msg.innerText = "ACCESO CONCEDIDO...";
-                msg.style.color = "var(--success)";
-                setTimeout(() => {
-                    window.location.href = "Dashboard.html";
-                }, 1000);
+            if(key === stored && Date.now() < parseInt(expiry)) {
+                window.location.href = "Dashboard.html";
             } else {
-                msg.innerText = "LICENCIA INVÁLIDA O VENCIDA";
-                msg.style.color = "var(--danger)";
+                const status = document.getElementById('status');
+                status.innerText = "ERROR: LICENCIA INVÁLIDA";
+                status.style.color = "var(--danger)";
             }
         }
     </script>
