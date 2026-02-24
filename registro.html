@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RADAR DE ORO | MASTER ACCESS</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        :root { --gold: #fcc200; --bg: #0a0b0d; }
+        body, html { margin: 0; padding: 0; height: 100%; background: var(--bg); font-family: 'Poppins', sans-serif; color: white; overflow: hidden; }
+        .market-bg { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(rgba(0,0,0,0.9), rgba(0,0,0,0.95)), url('https://images.unsplash.com/photo-1611974717482-58359234b1b6?q=80&w=2000'); background-size: cover; z-index: -1; }
+        .container { height: 100vh; display: flex; justify-content: center; align-items: center; padding: 20px; }
+        .glass-card { background: rgba(15, 17, 23, 0.98); padding: 30px; border-radius: 20px; border: 1px solid var(--gold); text-align: center; width: 100%; max-width: 400px; box-shadow: 0 0 40px rgba(0,0,0,0.8); }
+        h1 { font-family: 'Orbitron'; font-size: 1.4rem; color: var(--gold); letter-spacing: 2px; margin-bottom: 20px; }
+        .section-label { font-size: 0.6rem; color: var(--gold); font-family: 'Orbitron'; margin-bottom: 12px; display: block; border-bottom: 1px solid #333; padding-bottom: 5px; }
+        .action-btn { width: 100%; padding: 12px; border-radius: 8px; font-weight: 800; font-family: 'Orbitron'; cursor: pointer; border: none; margin-bottom: 10px; transition: 0.3s; font-size: 0.7rem; }
+        .btn-access { background: var(--gold); color: #000; }
+        .btn-exness { background: #fff; color: #000; }
+        .btn-binance { background: #F3BA2F; color: #000; display: flex; align-items: center; justify-content: center; gap: 8px; }
+        input { width: 100%; padding: 12px; background: #000; border: 1px solid #333; color: white; border-radius: 8px; margin-bottom: 10px; text-align: center; font-family: 'Orbitron'; font-size: 0.7rem; box-sizing: border-box; outline: none; }
+        .price-display { background: rgba(0,0,0,0.4); padding: 10px; border-radius: 10px; border: 1px dashed #444; margin-bottom: 15px; }
+        #cost { font-size: 1.5rem; font-weight: bold; font-family: 'Orbitron'; }
+        .loader { display: none; border: 3px solid #333; border-top: 3px solid var(--gold); border-radius: 50%; width: 20px; height: 20px; animation: spin 1s linear infinite; margin: 10px auto; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        #msg { font-size: 0.6rem; margin-top: 10px; font-family: 'Orbitron'; min-height: 15px; }
+    </style>
+</head>
+<body>
+    <div class="market-bg"></div>
+    <div class="container">
+        <div class="glass-card">
+            <h1>RADAR DE ORO</h1>
+            <span class="section-label">ACCESO CON LICENCIA</span>
+            <input type="text" id="licenseKey" placeholder="CÓDIGO DE LICENCIA">
+            <button class="action-btn btn-access" onclick="validarEntrada()">ENTRAR AL DASHBOARD</button>
+
+            <span class="section-label" style="margin-top:20px">ADQUIRIR LICENCIA</span>
+            <button class="action-btn btn-exness" onclick="window.open('https://www.exness.com/', '_blank')">REGISTRARSE EN BROKER</button>
+            <input type="text" id="idPartner" placeholder="TU ID DE SOCIO EXNESS" oninput="checkPromo()">
+            <div class="price-display">
+                <span id="cost">$89.00</span>
+                <div id="promo-info" style="font-size: 0.5rem; color: #666;">PAGO ANUAL USDT (BEP20)</div>
+            </div>
+            <button class="action-btn btn-binance" onclick="pagarBinance()">PAGAR CON BINANCE PAY</button>
+            <div id="loader" class="loader"></div>
+            <div id="msg"></div>
+        </div>
+    </div>
+
+    <script>
+        const MI_WALLET = "0xa478eeefbb892ef5cfd65261aedaeda1c9e6ff31";
+        const SECRET_SALT = "MASTER_GOLD_2026_PRO";
+
+        function checkPromo() {
+            const val = document.getElementById('idPartner').value.trim();
+            const cost = document.getElementById('cost');
+            const info = document.getElementById('promo-info');
+            if(val.length >= 5) {
+                cost.innerText = "$44.50"; cost.style.color = "#00ff88";
+                info.innerText = "¡DESCUENTO 50% SOCIO APLICADO!"; info.style.color = "#00ff88";
+            } else {
+                cost.innerText = "$89.00"; cost.style.color = "#fff";
+                info.innerText = "PAGO ANUAL USDT (BEP20)"; info.style.color = "#666";
+            }
+        }
+
+        function pagarBinance() {
+            const id = document.getElementById('idPartner').value.trim();
+            if(id.length < 5) { alert("Vincula tu ID de Exness primero."); return; }
+            
+            navigator.clipboard.writeText(MI_WALLET).then(() => {
+                const llave = "XAU-" + btoa(id + SECRET_SALT).substring(0, 10).toUpperCase();
+                alert("Billetera Copiada!\n\nTu Licencia: " + llave + "\n\nSe activará automáticamente tras el pago.");
+                window.open('https://www.binance.com/es/my/wallet/account/main/withdrawal/crypto/USDT', '_blank');
+                
+                document.getElementById('loader').style.display = "block";
+                setTimeout(() => {
+                    localStorage.setItem("master_access", "true");
+                    localStorage.setItem("user_license", llave);
+                    localStorage.setItem("user_exness", id);
+                    localStorage.setItem("expiry_date", Date.now() + (365 * 24 * 60 * 60 * 1000));
+                    window.location.href = "Dashboard.html";
+                }, 7000);
+            });
+        }
+
+        function validarEntrada() {
+            const key = document.getElementById('licenseKey').value.trim();
+            const storedKey = localStorage.getItem("user_license");
+            const expiry = localStorage.getItem("expiry_date");
+
+            if(key === storedKey && Date.now() < expiry) {
+                window.location.href = "Dashboard.html";
+            } else {
+                document.getElementById('msg').innerText = "LICENCIA INVÁLIDA O VENCIDA";
+                document.getElementById('msg').style.color = "#f85149";
+            }
+        }
+    </script>
+</body>
+</html>

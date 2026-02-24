@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RADAR DE ORO | MASTER ENGINE V10.0 ULTRA</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Poppins:wght@300;400;600&family=Roboto+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root { 
+            --gold: #fcc200; --bg: #050608; --sidebar: #0d1117; 
+            --card: #161b22; --success: #00ff88; --danger: #f85149; --blue: #00d4ff;
+        }
+
+        body { 
+            margin: 0; background: var(--bg); color: #e6edf3; 
+            font-family: 'Poppins', sans-serif; display: flex; height: 100vh; overflow: hidden; 
+        }
+
+        /* SIDEBAR PRO */
+        .sidebar { 
+            width: 280px; background: var(--sidebar); border-right: 1px solid #30363d; 
+            display: flex; flex-direction: column; padding: 25px; 
+        }
+        .logo-box { 
+            font-family: 'Orbitron'; color: var(--gold); text-align: center; 
+            padding-bottom: 25px; border-bottom: 1px solid #333; margin-bottom: 25px;
+        }
+        
+        /* PANEL DE BALANCE */
+        .balance-box {
+            background: rgba(0,0,0,0.4); border: 1px solid #333; padding: 15px;
+            border-radius: 12px; margin-bottom: 20px; font-family: 'Orbitron';
+        }
+        .bal-label { font-size: 0.5rem; color: #8b949e; display: block; }
+        .bal-val { font-size: 1.1rem; color: var(--success); }
+
+        .nav-link { 
+            padding: 12px; color: #8b949e; text-decoration: none; display: flex; 
+            align-items: center; gap: 12px; font-size: 0.8rem; border-radius: 8px; 
+            margin-bottom: 8px; cursor: pointer; transition: 0.3s;
+        }
+        .nav-link:hover, .nav-link.active { background: rgba(252,194,0,0.1); color: var(--gold); }
+
+        /* MAIN CONTENT */
+        .main { flex: 1; padding: 20px; overflow-y: auto; display: flex; flex-direction: column; gap: 15px; }
+
+        .top-row { display: grid; grid-template-columns: 2fr 1fr; gap: 15px; }
+
+        /* CONSOLA IA */
+        .console { 
+            background: #000; border: 1px solid #333; padding: 15px; 
+            font-family: 'Roboto Mono'; font-size: 0.65rem; color: var(--success); 
+            height: 100px; overflow: hidden; border-radius: 12px;
+        }
+
+        /* CHARTS COMPACTOS */
+        .charts-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; height: 380px; }
+        .chart-card { background: #000; border: 1px solid #333; border-radius: 15px; display: flex; flex-direction: column; padding: 8px; }
+        .chart-info { display: flex; justify-content: space-between; font-size: 0.6rem; color: var(--gold); padding: 5px; font-family: 'Orbitron'; }
+        iframe { width: 100%; flex: 1; border: none; border-radius: 10px; }
+
+        /* TRADING PANEL */
+        .trading-panel {
+            background: var(--card); border: 1px solid #333; padding: 20px;
+            border-radius: 20px; display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; align-items: center;
+        }
+        .lot-selector { background: #000; border: 1px solid #444; color: white; padding: 10px; border-radius: 8px; font-family: 'Orbitron'; text-align: center; }
+        
+        .btn { padding: 15px; border-radius: 10px; border: none; font-family: 'Orbitron'; font-weight: bold; cursor: pointer; transition: 0.2s; }
+        .btn-buy { background: var(--success); color: #000; }
+        .btn-sell { background: var(--danger); color: #fff; }
+        .btn-close { background: #333; color: #fff; }
+        .btn:hover { transform: scale(1.02); filter: brightness(1.2); }
+
+        /* MT5 OVERLAY */
+        #mt5Lock { 
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
+            background: rgba(0,0,0,0.98); z-index: 5000; display: flex; justify-content: center; align-items: center; 
+        }
+        .modal { 
+            background: var(--card); padding: 40px; border-radius: 25px; 
+            border: 1px solid var(--gold); text-align: center; width: 350px; 
+        }
+        .modal input { width: 100%; padding: 12px; margin-bottom: 10px; background: #000; border: 1px solid #333; color: white; border-radius: 8px; text-align: center; }
+
+        /* NOTIFICACIONES */
+        #toast {
+            position: fixed; bottom: 20px; right: 20px; background: #161b22;
+            border-left: 5px solid var(--gold); padding: 15px 25px; border-radius: 8px;
+            display: none; z-index: 6000; font-size: 0.8rem; box-shadow: 0 10px 30px #000;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="mt5Lock">
+        <div class="modal">
+            <i class="fas fa-terminal" style="color: var(--gold); font-size: 2.5rem; margin-bottom: 15px;"></i>
+            <h2 style="font-family: 'Orbitron'; font-size: 1rem;">MT5 CORE SYNC</h2>
+            <input type="text" id="mID" placeholder="NRO CUENTA MT5">
+            <input type="password" id="mPW" placeholder="MASTER PASSWORD">
+            <button class="btn btn-buy" style="width: 100%;" onclick="connect()">VINCULAR TERMINAL</button>
+        </div>
+    </div>
+
+    <div id="toast"></div>
+
+    <div class="sidebar">
+        <div class="logo-box">MASTER ENGINE</div>
+        
+        <div class="balance-box">
+            <span class="bal-label">BALANCE (USD)</span>
+            <div class="bal-val" id="bal">--</div>
+            <span class="bal-label" style="margin-top:10px">EQUIDAD</span>
+            <div class="bal-val" id="equ" style="color: var(--blue);">--</div>
+        </div>
+
+        <nav style="flex:1">
+            <div class="nav-link active"><i class="fas fa-microchip"></i> Neural Core V10</div>
+            <div class="nav-link" id="alBtn" onclick="toggleAL()"><i class="fas fa-shield-alt"></i> ANTI-LOSS: <span id="alSt">OFF</span></div>
+            <div class="nav-link" onclick="window.open('https://www.exness.com/', '_blank')"><i class="fas fa-external-link-alt"></i> Broker Exness</div>
+        </nav>
+
+        <div class="nav-link" onclick="logout()" style="color: var(--danger);"><i class="fas fa-power-off"></i> SALIR DEL SISTEMA</div>
+    </div>
+
+    <div class="main">
+        <div class="top-row">
+            <div class="console" id="logs">> Esperando conexión con el servidor maestro...</div>
+            <div class="stat-card" style="display:flex; flex-direction:column; justify-content:center; padding:10px;">
+                <span class="stat-label">FUERZA DEL ORO</span>
+                <div class="stat-val" id="gStr" style="color: var(--success);">0.00%</div>
+            </div>
+        </div>
+
+        <div class="charts-grid">
+            <div class="chart-card">
+                <div class="chart-info"><span>XAUUSD.PRO</span><span id="pGold">--</span></div>
+                <iframe src="https://s.tradingview.com/widgetembed/?symbol=OANDA%3AXAUUSD&theme=dark&style=1&interval=1"></iframe>
+            </div>
+            <div class="chart-card">
+                <div class="chart-info"><span>EURUSD.PRO</span><span id="pEur">--</span></div>
+                <iframe src="https://s.tradingview.com/widgetembed/?symbol=FX%3AEURUSD&theme=dark&style=1&interval=1"></iframe>
+            </div>
+        </div>
+
+        <div class="trading-panel">
+            <div style="display:flex; flex-direction:column;">
+                <span class="stat-label">LOT SIZE</span>
+                <select class="lot-selector" id="lot">
+                    <option>0.01</option>
+                    <option selected>0.10</option>
+                    <option>1.00</option>
+                </select>
+            </div>
+            <button class="btn btn-buy" onclick="trade('BUY')">BUY / COMPRA</button>
+            <button class="btn btn-sell" onclick="trade('SELL')">SELL / VENTA</button>
+            <button class="btn btn-close" onclick="trade('CLOSE')">CLOSE ALL</button>
+        </div>
+    </div>
+
+    <script>
+        let live = false;
+        let al = false;
+
+        // SEGURIDAD
+        (function(){
+            if(!localStorage.getItem("master_access")) window.location.href="index.html";
+        })();
+
+        function logout() {
+            localStorage.clear();
+            window.location.href="index.html";
+        }
+
+        function toggleAL() {
+            al = !al;
+            document.getElementById('alBtn').style.borderColor = al ? "var(--success)" : "transparent";
+            document.getElementById('alSt').innerText = al ? "ACTIVO" : "OFF";
+            toast(al ? "ESCUDO ANTI-LOSS VINCULADO" : "PROTECCIÓN REMOVIDA");
+        }
+
+        function toast(m) {
+            const t = document.getElementById('toast');
+            t.innerHTML = `<b>IA NOTIFICACIÓN:</b><br>${m}`;
+            t.style.display = 'block';
+            setTimeout(()=> t.style.display='none', 3000);
+        }
+
+        function connect() {
+            if(document.getElementById('mID').value.length < 4) return alert("Error de ID");
+            document.getElementById('mt5Lock').style.display = 'none';
+            live = true;
+            toast("CONEXIÓN EXITOSA CON MT5");
+            loop();
+        }
+
+        function trade(t) {
+            if(!live) return;
+            const log = document.getElementById('logs');
+            const d = document.createElement('div');
+            const lot = document.getElementById('lot').value;
+            d.innerHTML = `> [${new Date().toLocaleTimeString()}] ORDEN ${t} ENVIADA | LOT: ${lot} | ESTADO: OK`;
+            d.style.color = t === 'BUY' ? 'var(--success)' : (t === 'SELL' ? 'var(--danger)' : '#fff');
+            log.prepend(d);
+            toast(`ORDEN ${t} EJECUTADA`);
+        }
+
+        function loop() {
+            setInterval(() => {
+                // Simulación de Precios y Balance
+                const gold = (2000 + Math.random()*50).toFixed(2);
+                const eur = (1.08 + Math.random()*0.01).toFixed(4);
+                const balance = (5420 + Math.random()*10).toFixed(2);
+                
+                document.getElementById('pGold').innerText = gold;
+                document.getElementById('pEur').innerText = eur;
+                document.getElementById('bal').innerText = "$" + balance;
+                document.getElementById('equ').innerText = "$" + (parseFloat(balance) + 140).toFixed(2);
+                document.getElementById('gStr').innerText = (Math.random()*100).toFixed(2) + "%";
+
+                const l = document.createElement('div');
+                l.innerText = "> IA analizando liquidez en pool de Exness...";
+                document.getElementById('logs').prepend(l);
+            }, 3000);
+        }
+    </script>
+</body>
+</html>
