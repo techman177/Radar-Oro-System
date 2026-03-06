@@ -132,7 +132,8 @@
             mensajeEl.style.color = "#FFD700";
 
             const url = "https://gpoezpmciznhkwgsrcgo.supabase.co/rest/v1/Licencias";
-            const apiKey = "sb_publishable_mOh12j1-IPGHglr__RrqRA_VrLym7U6";
+            // ¡AQUÍ ESTÁ TU CLAVE EXACTA CORREGIDA!
+            const apiKey = "sb_publishable_mOh12j1-IPGHgIr__RrqRA_VrLym7U6";
 
             try {
                 const response = await fetch(url, {
@@ -150,7 +151,6 @@
                     mensajeEl.style.color = "#00ff00";
                     document.getElementById('mt5_id').value = ""; 
                 } else {
-                    // AQUÍ ESTÁ LA MAGIA QUE NOS DIRÁ EL ERROR EXACTO
                     const errorData = await response.json();
                     mensajeEl.innerText = "❌ SUPABASE DICE: " + (errorData.message || errorData.details || "Error desconocido");
                     mensajeEl.style.color = "#ff4444";
