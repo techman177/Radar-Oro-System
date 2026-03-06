@@ -2,285 +2,292 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>RADAR DE ORO | MASTER ENGINE PRO</title>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Poppins:wght@300;400;600&family=Roboto+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IntegratCore - Radar de Oro V1.5 PRO</title>
     <style>
-        :root { 
-            --gold: #fcc200; --bg: #050608; --sidebar: #0d1117; 
-            --card: #161b22; --success: #00ff88; --danger: #f85149; --blue: #00d4ff;
-        }
-
-        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; margin: 0; padding: 0; }
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Roboto:wght@400;700&display=swap');
         
-        body, html { 
-            height: 100%; width: 100%;
-            background: var(--bg); color: #e6edf3; font-family: 'Poppins', sans-serif;
-            overflow: hidden; 
+        body {
+            background-color: #0a0e17; /* Fondo ultra oscuro */
+            color: #ffffff;
+            font-family: 'Roboto', sans-serif;
+            text-align: center;
+            margin: 0;
+            padding: 15px;
         }
-
-        .app-wrapper { display: flex; height: 100vh; width: 100vw; }
-
-        /* PANEL DE CONTROL */
-        .control-panel { 
-            width: 360px; background: var(--sidebar); border-right: 1px solid #30363d; 
-            display: flex; flex-direction: column; padding: 15px; z-index: 100;
-            overflow-y: auto;
+        .dashboard-container {
+            max-width: 420px;
+            margin: 0 auto;
+            border: 1px solid #30363d;
+            border-radius: 12px;
+            background: linear-gradient(180deg, #161b22, #0a0e17);
+            padding: 20px;
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5);
         }
-
-        .chart-container { flex: 1; background: #000; position: relative; }
-
-        .brand { font-family: 'Orbitron'; color: var(--gold); text-align: center; font-size: 1.1rem; margin-bottom: 12px; letter-spacing: 2px; }
+        .header {
+            font-family: 'Orbitron', sans-serif;
+            color: #FFD700;
+            font-size: 20px;
+            letter-spacing: 2px;
+            margin-bottom: 5px;
+            text-transform: uppercase;
+        }
+        .status-badge {
+            display: inline-block;
+            border: 1px solid #00ff00;
+            color: #00ff00;
+            padding: 6px 20px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            background-color: rgba(0, 255, 0, 0.05);
+            box-shadow: 0 0 10px rgba(0, 255, 0, 0.2);
+        }
         
-        /* BOTÓN DE PODER (ON/OFF) */
-        .power-switch {
-            display: flex; align-items: center; justify-content: center;
-            background: rgba(255,255,255,0.05); padding: 10px; border-radius: 12px;
-            margin-bottom: 15px; cursor: pointer; border: 1px solid #333; transition: 0.3s;
+        /* Stats (Balance y Beneficio) */
+        .stats-grid {
+            display: flex;
+            justify-content: space-between;
+            gap: 15px;
+            margin-bottom: 20px;
         }
-        .power-active { border-color: var(--success); box-shadow: 0 0 15px rgba(0,255,136,0.2); }
-        .power-label { font-family: 'Orbitron'; font-size: 0.7rem; margin-left: 10px; }
-
-        /* ESTADÍSTICAS */
-        .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 12px; }
-        .stat-item { background: var(--card); padding: 10px; border-radius: 8px; border: 1px solid #333; text-align: center; }
-        .stat-label { font-size: 0.5rem; color: #8b949e; font-family: 'Orbitron'; display: block; }
-        .stat-value { font-family: 'Orbitron'; font-size: 0.9rem; font-weight: bold; }
-
-        /* CONSOLA DE IA */
-        .ai-console { 
-            background: rgba(0,0,0,0.8); border: 1px solid #333; padding: 8px; 
-            font-family: 'Roboto Mono', monospace; font-size: 0.6rem; color: var(--success); 
-            height: 70px; border-radius: 6px; margin-bottom: 12px;
-            display: flex; flex-direction: column-reverse; overflow: hidden;
+        .stat-box {
+            background-color: #12161e;
+            border: 1px solid #30363d;
+            border-radius: 8px;
+            padding: 15px;
+            flex: 1;
         }
-
-        /* MONITOR DE OPERACIONES */
-        .trades-monitor { 
-            background: #000; border: 1px solid #222; border-radius: 8px; 
-            margin-bottom: 12px; padding: 10px; flex-grow: 1; overflow-y: auto;
-            min-height: 100px;
+        .stat-title {
+            font-size: 10px;
+            color: #8b949e;
+            text-transform: uppercase;
+            letter-spacing: 1px;
         }
-        .trade-row { 
-            display: flex; justify-content: space-between; font-size: 0.7rem; 
-            font-family: 'Roboto Mono'; padding: 6px 0; border-bottom: 1px solid #111;
+        .stat-value {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 18px;
+            color: #00ff00;
+            margin-top: 5px;
         }
 
-        /* MÓDULO DE TRADING */
-        .trading-module { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
-        .lot-selector { grid-column: span 2; display: flex; align-items: center; justify-content: space-between; background: #000; padding: 8px; border-radius: 8px; border: 1px solid #444; }
-        .lot-input { background: none; border: none; color: white; font-family: 'Orbitron'; width: 60px; text-align: center; outline: none; font-size: 0.9rem; }
-
-        .pair-selector { grid-column: span 2; background: #333; color: white; border: none; padding: 8px; border-radius: 8px; font-family: 'Orbitron'; font-size: 0.7rem; margin: 5px 0; }
-
-        .btn { 
-            padding: 12px; border-radius: 8px; border: none; font-family: 'Orbitron'; 
-            font-weight: bold; cursor: pointer; font-size: 0.7rem; transition: 0.2s;
-            display: flex; align-items: center; justify-content: center; gap: 5px;
-        }
-        .btn-buy { background: var(--success); color: #000; }
-        .btn-sell { background: var(--danger); color: #fff; }
-        .btn-shield { grid-column: span 2; background: rgba(0,212,255,0.1); color: var(--blue); border: 1px solid var(--blue); margin-top: 5px; }
-        .btn-close { grid-column: span 2; background: #222; color: #777; margin-top: 5px; font-size: 0.6rem; }
-
-        /* RESPONSIVO PARA IPHONE Y CELULARES */
-        @media (max-width: 850px) {
-            .app-wrapper { flex-direction: column; }
-            .control-panel { width: 100%; height: 55%; border-right: none; border-bottom: 1px solid #30363d; padding: 10px; }
-            .chart-container { height: 45%; }
-            .brand { font-size: 0.9rem; margin-bottom: 5px; }
-            .stats-grid { margin-bottom: 5px; }
-            .trades-monitor { min-height: 70px; }
+        /* Terminal IA */
+        .ai-terminal {
+            background-color: #000000;
+            border: 1px solid #30363d;
+            border-radius: 6px;
+            padding: 12px;
+            text-align: left;
+            font-family: monospace;
+            color: #00ff00;
+            font-size: 11px;
+            margin-bottom: 20px;
+            line-height: 1.5;
         }
 
-        iframe { width: 100%; height: 100%; border: none; }
-        .active-glow { animation: glow 1.5s infinite alternate; }
-        @keyframes glow { from { text-shadow: 0 0 5px var(--success); } to { text-shadow: 0 0 15px var(--success); } }
+        /* Historial de Operaciones */
+        .history-box {
+            background-color: #12161e;
+            border: 1px solid #30363d;
+            border-radius: 6px;
+            padding: 10px;
+            margin-bottom: 20px;
+            text-align: left;
+        }
+        .history-row {
+            display: flex;
+            justify-content: space-between;
+            border-bottom: 1px solid #21262d;
+            padding: 8px 0;
+            font-size: 13px;
+            font-family: 'Orbitron', sans-serif;
+        }
+        .history-row:last-child { border-bottom: none; }
+        .buy-text { color: #00ff00; }
+        .sell-text { color: #ff4444; }
+
+        /* Controles Visuales */
+        .control-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: #12161e;
+            border: 1px solid #30363d;
+            padding: 10px 15px;
+            border-radius: 6px;
+            margin-bottom: 15px;
+            font-size: 12px;
+            color: #8b949e;
+        }
+        .btn-grid {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 25px;
+        }
+        .btn-buy, .btn-sell {
+            flex: 1;
+            padding: 12px;
+            border: none;
+            border-radius: 6px;
+            font-weight: bold;
+            font-size: 14px;
+            color: #000;
+        }
+        .btn-buy { background-color: #00ff00; }
+        .btn-sell { background-color: #ff4444; color: #fff; }
+
+        /* Formulario Real de Vinculación */
+        .auth-section {
+            border-top: 1px dashed #30363d;
+            padding-top: 20px;
+        }
+        input {
+            width: 85%;
+            padding: 14px;
+            background-color: #0a0e17;
+            border: 1px solid #FFD700;
+            color: #ffffff;
+            border-radius: 6px;
+            font-size: 14px;
+            text-align: center;
+            margin-bottom: 10px;
+            font-family: 'Orbitron', sans-serif;
+        }
+        input:focus { outline: none; box-shadow: 0 0 10px rgba(255, 215, 0, 0.3); }
+        
+        .btn-gold {
+            background-color: #FFD700;
+            color: #000000;
+            width: 100%;
+            padding: 15px;
+            border: none;
+            border-radius: 6px;
+            font-weight: bold;
+            font-size: 13px;
+            cursor: pointer;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 15px;
+        }
+        .btn-support {
+            background-color: transparent;
+            color: #8b949e;
+            border: 1px solid #8b949e;
+            width: 100%;
+            padding: 12px;
+            border-radius: 6px;
+            font-size: 12px;
+            text-transform: uppercase;
+        }
+        #mensaje { font-size: 13px; margin-bottom: 15px; height: 20px; }
     </style>
 </head>
 <body>
 
-    <audio id="successSound" src="https://assets.mixkit.co/active_storage/sfx/2017/2017-preview.mp3"></audio>
+    <div class="dashboard-container">
+        <h2 class="header">MASTER RADAR V1.5</h2>
+        <div class="status-badge">⏻ SISTEMA: OPERANDO</div>
 
-    <div class="app-wrapper">
-        <aside class="control-panel">
-            <div class="brand">MASTER RADAR V10</div>
-
-            <div class="power-switch" id="powerBtn" onclick="togglePower()">
-                <i id="pIcon" class="fas fa-power-off" style="color: #555;"></i>
-                <span class="power-label" id="pLabel">SISTEMA: APAGADO</span>
+        <div class="stats-grid">
+            <div class="stat-box">
+                <div class="stat-title">BALANCE (USD)</div>
+                <div class="stat-value" style="color: #00ff00;">$5,477.38</div>
             </div>
-
-            <div class="stats-grid">
-                <div class="stat-item">
-                    <span class="stat-label">BALANCE (USD)</span>
-                    <span class="stat-value" id="balanceShow" style="color: var(--success); font-size: 1rem;">$5,420.00</span>
-                </div>
-                <div class="stat-item">
-                    <span class="stat-label">BENEFICIO</span>
-                    <span class="stat-value" id="profitShow">$0.00</span>
-                </div>
+            <div class="stat-box">
+                <div class="stat-title">BENEFICIO HOY</div>
+                <div class="stat-value" style="color: #00ff00;">+$124.50</div>
             </div>
+        </div>
 
-            <div class="ai-console" id="logs">
-                <div>> Radar en modo Standby...</div>
+        <div class="ai-terminal">
+            > IA: Analizando algoritmos institucionales...<br>
+            > IA: Señal detectada en zona premium XAUUSD.<br>
+            <span style="color: #00ff00;">> NEURAL SHIELD: ACTIVE 🛡️</span>
+        </div>
+
+        <div class="history-box">
+            <div class="history-row">
+                <span class="buy-text">BUY 0.10 | XAUUSD</span>
+                <span style="color: #00ff00;">+$24.35</span>
             </div>
-
-            <div class="trades-monitor" id="tradeBox">
-                <div style="color: #333; font-size: 0.5rem; text-align: center; margin-top: 20px;">SISTEMA OFFLINE</div>
+            <div class="history-row">
+                <span class="buy-text">BUY 0.05 | EURUSD</span>
+                <span style="color: #00ff00;">+$12.10</span>
             </div>
-
-            <div class="trading-module">
-                <select class="pair-selector" id="assetSelect" onchange="changeAsset()">
-                    <option value="XAUUSD">ACTIVO: XAUUSD (ORO)</option>
-                    <option value="EURUSD">ACTIVO: EURUSD (EURO)</option>
-                </select>
-
-                <div class="lot-selector">
-                    <span class="stat-label">LOTS:</span>
-                    <input type="number" step="0.01" value="0.10" class="lot-input" id="lots">
-                </div>
-
-                <button class="btn btn-buy" onclick="executeOrder('BUY')"><i class="fas fa-arrow-up"></i> COMPRA</button>
-                <button class="btn btn-sell" onclick="executeOrder('SELL')"><i class="fas fa-arrow-down"></i> VENTA</button>
-                
-                <button class="btn btn-shield" id="shieldBtn" onclick="toggleShield()">
-                    <i class="fas fa-shield-alt"></i> NEURAL SHIELD: <span id="shieldSt">OFF</span>
-                </button>
-                
-                <button class="btn btn-close" onclick="closeAll()">CERRAR OPERACIONES</button>
+            <div class="history-row">
+                <span class="sell-text">SELL 0.10 | XAUUSD</span>
+                <span style="color: #00ff00;">+$88.05</span>
             </div>
-        </aside>
+        </div>
 
-        <main class="chart-container" id="chartArea">
-            <iframe id="tvChart" src="https://s.tradingview.com/widgetembed/?symbol=OANDA%3AXAUUSD&theme=dark&style=1&interval=1&hidesidetoolbar=1"></iframe>
-        </main>
+        <div class="control-row">
+            <span>ACTIVO: XAUUSD (ORO)</span>
+            <span>▼</span>
+        </div>
+        <div class="control-row">
+            <span>LOTS:</span>
+            <span style="color: #fff; font-family: 'Orbitron';">0.10</span>
+        </div>
+        
+        <div class="btn-grid">
+            <button class="btn-buy">↑ COMPRA</button>
+            <button class="btn-sell">↓ VENTA</button>
+        </div>
+
+        <div class="auth-section">
+            <div style="font-size: 11px; color: #8b949e; margin-bottom: 10px; text-transform: uppercase;">Autenticación del Bot (MT5)</div>
+            <input type="number" id="mt5_id" placeholder="INGRESE SU ID DE MT5">
+            <p id="mensaje"></p>
+            <button class="btn-gold" onclick="vincularMT5()">🔐 VINCULAR TERMINAL MT5</button>
+            <button class="btn-support" onclick="window.location.href='https://t.me/IntegratCoreSupport'">🎧 SOPORTE TÉCNICO</button>
+        </div>
+
     </div>
 
     <script>
-        // SEGURIDAD
-        if (localStorage.getItem("master_access") !== "true") { window.location.href = "index.html"; }
-
-        let botRunning = false;
-        let shieldOn = false;
-        let orders = [];
-        let baseBal = 5420.00;
-        const sound = document.getElementById('successSound');
-
-        function togglePower() {
-            botRunning = !botRunning;
-            const btn = document.getElementById('powerBtn');
-            const icon = document.getElementById('pIcon');
-            const label = document.getElementById('pLabel');
+        async function vincularMT5() {
+            const id = document.getElementById('mt5_id').value;
+            const mensajeEl = document.getElementById('mensaje');
             
-            if(botRunning) {
-                btn.classList.add('power-active');
-                icon.style.color = "var(--success)";
-                label.innerText = "SISTEMA: OPERANDO";
-                addLog("> IA: Neural Core inicializado exitosamente.");
-                refreshUI();
-            } else {
-                btn.classList.remove('power-active');
-                icon.style.color = "#555";
-                label.innerText = "SISTEMA: APAGADO";
-                addLog("> IA: Sistema en pausa.");
-                closeAll();
-            }
-        }
-
-        function toggleShield() {
-            if(!botRunning) return alert("Enciende el sistema primero");
-            shieldOn = !shieldOn;
-            document.getElementById('shieldSt').innerText = shieldOn ? "ACTIVE" : "OFF";
-            document.getElementById('shieldBtn').style.color = shieldOn ? "var(--success)" : "var(--blue)";
-            addLog(shieldOn ? "> IA: Escudo Anti-Loss activado (Máxima protección)." : "> IA: Escudo desactivado.");
-        }
-
-        function changeAsset() {
-            const asset = document.getElementById('assetSelect').value;
-            const chart = document.getElementById('tvChart');
-            chart.src = `https://s.tradingview.com/widgetembed/?symbol=OANDA%3A${asset}&theme=dark&style=1&interval=1&hidesidetoolbar=1`;
-            addLog(`> IA: Cambiando análisis a ${asset}`);
-        }
-
-        function executeOrder(type) {
-            if(!botRunning) return alert("Activa el bot para operar.");
-            const lot = document.getElementById('lots').value;
-            const id = Math.floor(Math.random()*1000);
-            orders.push({ id, type, lot, profit: 0 });
-            addLog(`> ORDEN ${type} ACEPTADA (ID: ${id})`);
-            refreshUI();
-        }
-
-        function closeAll() {
-            orders = [];
-            refreshUI();
-            document.getElementById('profitShow').innerText = "$0.00";
-            document.getElementById('profitShow').style.color = "white";
-        }
-
-        function refreshUI() {
-            const box = document.getElementById('tradeBox');
-            if(orders.length === 0) {
-                box.innerHTML = `<div style="color:#333; font-size:0.5rem; text-align:center; margin-top:20px;">${botRunning ? 'BUSCANDO ENTRADAS...' : 'SISTEMA OFFLINE'}</div>`;
+            if(!id) {
+                mensajeEl.innerText = "⚠️ Ingrese un ID válido.";
+                mensajeEl.style.color = "#ff4444";
                 return;
             }
-            box.innerHTML = orders.map(o => `
-                <div class="trade-row">
-                    <span style="color:${o.type==='BUY'?'var(--success)':'var(--danger)'}">${o.type} ${o.lot}</span>
-                    <span id="p-${o.id}" style="color:var(--success)">$${o.profit.toFixed(2)}</span>
-                </div>
-            `).join('');
-        }
 
-        function addLog(t) {
-            const l = document.getElementById('logs');
-            const d = document.createElement('div');
-            d.innerText = t;
-            l.prepend(d);
-            if(l.childNodes.length > 10) l.removeChild(l.lastChild);
-        }
+            mensajeEl.innerText = "Sincronizando con IntegratCore Cloud...";
+            mensajeEl.style.color = "#FFD700";
 
-        // MOTOR DE MERCADO CON SONIDO DE ÉXITO
-        setInterval(() => {
-            if(!botRunning) return;
-            let total = 0;
-            orders.forEach(o => {
-                // Mejora del bot: Si el shield está ON, la probabilidad de ganancia sube
-                let move = (Math.random() * 4 - 1.8);
-                if(shieldOn && move < 0) move = move * 0.4; // Reduce pérdidas si el escudo está ON
-                
-                o.profit += move;
-                total += o.profit;
+            // Conexión a tu Supabase
+            const url = "https://gpoezpmciznhkwgsrcgo.supabase.co/rest/v1/Licencias";
+            const apiKey = "sb_publishable_mOh12j1-IPGHglr__RrqRA_VrLym7U6";
 
-                // Sonido si una operación supera los $10 de ganancia de repente (acierto)
-                if(move > 2.5) {
-                    sound.currentTime = 0;
-                    sound.play().catch(e => {}); // Play sound
+            try {
+                const response = await fetch(url, {
+                    method: 'POST',
+                    headers: {
+                        'apikey': apiKey,
+                        'Authorization': `Bearer ${apiKey}`,
+                        'Content-Type': 'application/json',
+                        'Prefer': 'resolution=merge-duplicates'
+                    },
+                    body: JSON.stringify({ numero_cuenta: id, estado: 'activo' })
+                });
+
+                if (response.ok) {
+                    mensajeEl.innerText = "✅ ¡ID VINCULADO! Abra MetaTrader 5 para operar.";
+                    mensajeEl.style.color = "#00ff00";
+                    document.getElementById('mt5_id').value = ""; // Limpia la caja
+                } else {
+                    mensajeEl.innerText = "❌ Error. Verifique sus datos.";
+                    mensajeEl.style.color = "#ff4444";
                 }
-
-                const el = document.getElementById(`p-${o.id}`);
-                if(el) {
-                    el.innerText = `$${o.profit.toFixed(2)}`;
-                    el.style.color = o.profit >= 0 ? "var(--success)" : "var(--danger)";
-                }
-            });
-
-            if(orders.length > 0) {
-                const pShow = document.getElementById('profitShow');
-                pShow.innerText = (total >= 0 ? "+" : "") + `$${total.toFixed(2)}`;
-                pShow.style.color = total >= 0 ? "var(--success)" : "var(--danger)";
-                document.getElementById('balanceShow').innerText = `$${(baseBal + total).toFixed(2)}`;
+            } catch (error) {
+                mensajeEl.innerText = "❌ Error de conexión de red.";
+                mensajeEl.style.color = "#ff4444";
             }
-        }, 2000);
-
-        // LOGS IA
-        setInterval(() => {
-            if(!botRunning) return;
-            const m = ["> IA: Escaneando liquidez...", "> IA: Algoritmo ajustando Take Profit", "> IA: Confirmando tendencia H1", "> IA: Señal detectada en zona premium"];
-            addLog(m[Math.floor(Math.random()*m.length)]);
-        }, 8000);
+        }
     </script>
 </body>
 </html>
