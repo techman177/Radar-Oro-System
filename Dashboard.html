@@ -8,7 +8,7 @@
         @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Roboto:wght@400;700&display=swap');
         
         body {
-            background-color: #0a0e17; /* Fondo ultra oscuro */
+            background-color: #0a0e17; 
             color: #ffffff;
             font-family: 'Roboto', sans-serif;
             text-align: center;
@@ -45,34 +45,11 @@
             box-shadow: 0 0 10px rgba(0, 255, 0, 0.2);
         }
         
-        /* Stats (Balance y Beneficio) */
-        .stats-grid {
-            display: flex;
-            justify-content: space-between;
-            gap: 15px;
-            margin-bottom: 20px;
-        }
-        .stat-box {
-            background-color: #12161e;
-            border: 1px solid #30363d;
-            border-radius: 8px;
-            padding: 15px;
-            flex: 1;
-        }
-        .stat-title {
-            font-size: 10px;
-            color: #8b949e;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-        .stat-value {
-            font-family: 'Orbitron', sans-serif;
-            font-size: 18px;
-            color: #00ff00;
-            margin-top: 5px;
-        }
+        .stats-grid { display: flex; justify-content: space-between; gap: 15px; margin-bottom: 20px; }
+        .stat-box { background-color: #12161e; border: 1px solid #30363d; border-radius: 8px; padding: 15px; flex: 1; }
+        .stat-title { font-size: 10px; color: #8b949e; text-transform: uppercase; letter-spacing: 1px; }
+        .stat-value { font-family: 'Orbitron', sans-serif; font-size: 18px; color: #00ff00; margin-top: 5px; }
 
-        /* Terminal IA */
         .ai-terminal {
             background-color: #000000;
             border: 1px solid #30363d;
@@ -84,30 +61,16 @@
             font-size: 11px;
             margin-bottom: 20px;
             line-height: 1.5;
+            height: 80px;
+            overflow-y: auto;
         }
 
-        /* Historial de Operaciones */
-        .history-box {
-            background-color: #12161e;
-            border: 1px solid #30363d;
-            border-radius: 6px;
-            padding: 10px;
-            margin-bottom: 20px;
-            text-align: left;
-        }
-        .history-row {
-            display: flex;
-            justify-content: space-between;
-            border-bottom: 1px solid #21262d;
-            padding: 8px 0;
-            font-size: 13px;
-            font-family: 'Orbitron', sans-serif;
-        }
+        .history-box { background-color: #12161e; border: 1px solid #30363d; border-radius: 6px; padding: 10px; margin-bottom: 20px; text-align: left; }
+        .history-row { display: flex; justify-content: space-between; border-bottom: 1px solid #21262d; padding: 8px 0; font-size: 13px; font-family: 'Orbitron', sans-serif; }
         .history-row:last-child { border-bottom: none; }
         .buy-text { color: #00ff00; }
         .sell-text { color: #ff4444; }
 
-        /* Controles Visuales */
         .control-row {
             display: flex;
             justify-content: space-between;
@@ -120,66 +83,35 @@
             font-size: 12px;
             color: #8b949e;
         }
-        .btn-grid {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 25px;
-        }
-        .btn-buy, .btn-sell {
-            flex: 1;
-            padding: 12px;
-            border: none;
-            border-radius: 6px;
-            font-weight: bold;
-            font-size: 14px;
-            color: #000;
-        }
-        .btn-buy { background-color: #00ff00; }
-        .btn-sell { background-color: #ff4444; color: #fff; }
-
-        /* Formulario Real de Vinculación */
-        .auth-section {
-            border-top: 1px dashed #30363d;
-            padding-top: 20px;
-        }
-        input {
-            width: 85%;
-            padding: 14px;
-            background-color: #0a0e17;
-            border: 1px solid #FFD700;
-            color: #ffffff;
-            border-radius: 6px;
-            font-size: 14px;
-            text-align: center;
-            margin-bottom: 10px;
-            font-family: 'Orbitron', sans-serif;
-        }
-        input:focus { outline: none; box-shadow: 0 0 10px rgba(255, 215, 0, 0.3); }
         
-        .btn-gold {
-            background-color: #FFD700;
-            color: #000000;
-            width: 100%;
-            padding: 15px;
+        select, .lotes-input {
+            background: transparent;
+            color: #fff;
             border: none;
-            border-radius: 6px;
-            font-weight: bold;
-            font-size: 13px;
-            cursor: pointer;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            margin-bottom: 15px;
+            outline: none;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 14px;
         }
-        .btn-support {
-            background-color: transparent;
-            color: #8b949e;
-            border: 1px solid #8b949e;
-            width: 100%;
-            padding: 12px;
-            border-radius: 6px;
-            font-size: 12px;
-            text-transform: uppercase;
+        .lotes-input { width: 60px; text-align: right; border-bottom: 1px solid #30363d; }
+
+        .btn-grid { display: flex; gap: 10px; margin-bottom: 10px; }
+        .btn-buy, .btn-sell, .btn-close-ops {
+            flex: 1; padding: 12px; border: none; border-radius: 6px; font-weight: bold; font-size: 14px; cursor: pointer; transition: 0.2s;
         }
+        .btn-buy { background-color: #00ff00; color: #000; }
+        .btn-buy:active { transform: scale(0.95); background-color: #00cc00; }
+        .btn-sell { background-color: #ff4444; color: #fff; }
+        .btn-sell:active { transform: scale(0.95); background-color: #cc0000; }
+        
+        .btn-close-ops { width: 100%; background-color: #1c2128; color: #8b949e; border: 1px solid #30363d; margin-bottom: 25px; font-size: 12px; }
+        .btn-close-ops:active { background-color: #30363d; color: #fff; }
+
+        .auth-section { border-top: 1px dashed #30363d; padding-top: 20px; }
+        .id-input { width: 85%; padding: 14px; background-color: #0a0e17; border: 1px solid #FFD700; color: #ffffff; border-radius: 6px; font-size: 14px; text-align: center; margin-bottom: 10px; font-family: 'Orbitron', sans-serif; }
+        .id-input:focus { outline: none; box-shadow: 0 0 10px rgba(255, 215, 0, 0.3); }
+        
+        .btn-gold { background-color: #FFD700; color: #000000; width: 100%; padding: 15px; border: none; border-radius: 6px; font-weight: bold; font-size: 13px; cursor: pointer; text-transform: uppercase; margin-bottom: 15px; }
+        .btn-support { background-color: transparent; color: #8b949e; border: 1px solid #8b949e; width: 100%; padding: 12px; border-radius: 6px; font-size: 12px; text-transform: uppercase; cursor: pointer; }
         #mensaje { font-size: 13px; margin-bottom: 15px; height: 20px; }
     </style>
 </head>
@@ -200,7 +132,7 @@
             </div>
         </div>
 
-        <div class="ai-terminal">
+        <div class="ai-terminal" id="terminal-screen">
             > IA: Analizando algoritmos institucionales...<br>
             > IA: Señal detectada en zona premium XAUUSD.<br>
             <span style="color: #00ff00;">> NEURAL SHIELD: ACTIVE 🛡️</span>
@@ -215,37 +147,61 @@
                 <span class="buy-text">BUY 0.05 | EURUSD</span>
                 <span style="color: #00ff00;">+$12.10</span>
             </div>
-            <div class="history-row">
-                <span class="sell-text">SELL 0.10 | XAUUSD</span>
-                <span style="color: #00ff00;">+$88.05</span>
-            </div>
         </div>
 
         <div class="control-row">
-            <span>ACTIVO: XAUUSD (ORO)</span>
-            <span>▼</span>
+            <span>ACTIVO:</span>
+            <select id="activo_select">
+                <option value="XAUUSD">XAUUSD (ORO)</option>
+                <option value="EURUSD">EURUSD</option>
+            </select>
         </div>
         <div class="control-row">
             <span>LOTS:</span>
-            <span style="color: #fff; font-family: 'Orbitron';">0.10</span>
+            <input type="number" id="lotes_input" class="lotes-input" value="0.10" step="0.01">
         </div>
         
         <div class="btn-grid">
-            <button class="btn-buy">↑ COMPRA</button>
-            <button class="btn-sell">↓ VENTA</button>
+            <button class="btn-buy" onclick="ejecutarComando('COMPRA')">↑ COMPRA</button>
+            <button class="btn-sell" onclick="ejecutarComando('VENTA')">↓ VENTA</button>
         </div>
+        <button class="btn-close-ops" onclick="ejecutarComando('CERRAR')">CERRAR OPERACIONES</button>
 
         <div class="auth-section">
             <div style="font-size: 11px; color: #8b949e; margin-bottom: 10px; text-transform: uppercase;">Autenticación del Bot (MT5)</div>
-            <input type="number" id="mt5_id" placeholder="INGRESE SU ID DE MT5">
+            <input type="number" id="mt5_id" class="id-input" placeholder="INGRESE SU ID DE MT5">
             <p id="mensaje"></p>
             <button class="btn-gold" onclick="vincularMT5()">🔐 VINCULAR TERMINAL MT5</button>
             <button class="btn-support" onclick="window.location.href='https://t.me/IntegratCoreSupport'">🎧 SOPORTE TÉCNICO</button>
         </div>
-
     </div>
 
     <script>
+        // Función para que los botones de trading respondan
+        function ejecutarComando(tipo) {
+            const terminal = document.getElementById('terminal-screen');
+            const activo = document.getElementById('activo_select').value;
+            const lotes = document.getElementById('lotes_input').value;
+            
+            let comandoTexto = "";
+            if(tipo === 'CERRAR') {
+                comandoTexto = `> Enviando orden: CERRAR TODAS LAS OPERACIONES...`;
+            } else {
+                comandoTexto = `> Enviando señal: ${tipo} ${lotes} LOTS en ${activo}...`;
+            }
+
+            // Agrega el texto a la pantalla negra
+            terminal.innerHTML += `<br><span style="color: #fff;">${comandoTexto}</span>`;
+            terminal.scrollTop = terminal.scrollHeight; // Baja el scroll automáticamente
+
+            // Simula la confirmación después de 1 segundo
+            setTimeout(() => {
+                terminal.innerHTML += `<br><span style="color: #FFD700;">> OK: MetaTrader 5 recibió la orden.</span>`;
+                terminal.scrollTop = terminal.scrollHeight;
+            }, 1200);
+        }
+
+        // Función de conexión a Supabase (CORREGIDA)
         async function vincularMT5() {
             const id = document.getElementById('mt5_id').value;
             const mensajeEl = document.getElementById('mensaje');
@@ -259,7 +215,6 @@
             mensajeEl.innerText = "Sincronizando con IntegratCore Cloud...";
             mensajeEl.style.color = "#FFD700";
 
-            // Conexión a tu Supabase
             const url = "https://gpoezpmciznhkwgsrcgo.supabase.co/rest/v1/Licencias";
             const apiKey = "sb_publishable_mOh12j1-IPGHglr__RrqRA_VrLym7U6";
 
@@ -269,8 +224,7 @@
                     headers: {
                         'apikey': apiKey,
                         'Authorization': `Bearer ${apiKey}`,
-                        'Content-Type': 'application/json',
-                        'Prefer': 'resolution=merge-duplicates'
+                        'Content-Type': 'application/json'
                     },
                     body: JSON.stringify({ numero_cuenta: id, estado: 'activo' })
                 });
@@ -280,7 +234,7 @@
                     mensajeEl.style.color = "#00ff00";
                     document.getElementById('mt5_id').value = ""; // Limpia la caja
                 } else {
-                    mensajeEl.innerText = "❌ Error. Verifique sus datos.";
+                    mensajeEl.innerText = "❌ Error al guardar el ID en la nube.";
                     mensajeEl.style.color = "#ff4444";
                 }
             } catch (error) {
