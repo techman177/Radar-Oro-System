@@ -244,7 +244,7 @@
             }, 800);
         }
 
-        // CONEXIÓN MAESTRA A SUPABASE
+        // CONEXIÓN MAESTRA A SUPABASE (CON LA LLAVE YA INYECTADA)
         async function vincularMT5() {
             const id = document.getElementById('mt5_id').value;
             const msg = document.getElementById('mensaje');
@@ -258,15 +258,17 @@
             msg.innerText = "SINCRONIZANDO CON LA NUBE...";
             msg.style.color = "#fcc200";
 
+            // Aquí está tu llave ya integrada en el código
+            const miLlaveSupabase = "sb_publishable_mOh12j1-IPGHglr__RrqRA_VrLym7U6"; 
+            
             const url = "https://gpoezpmciznhkwgsrcgo.supabase.co/rest/v1/Licencias";
-            const apiKey = "sb_publishable_mOh12j1-IPGHglr__RrqRA_VrLym7U6";
-
+            
             try {
                 const response = await fetch(url, {
                     method: 'POST',
                     headers: {
-                        'apikey': apiKey,
-                        'Authorization': `Bearer ${apiKey}`,
+                        'apikey': miLlaveSupabase,
+                        'Authorization': `Bearer ${miLlaveSupabase}`,
                         'Content-Type': 'application/json'
                     },
                     body: JSON.stringify({ numero_cuenta: id, estado: 'activo' })
