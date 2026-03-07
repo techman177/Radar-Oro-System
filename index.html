@@ -117,8 +117,8 @@
         const SALT = "GOLD_RADAR_2026_PRO";
         const supabaseUrl = "https://gpoezpmciznhkwgsrcgo.supabase.co/rest/v1/Licencias";
         
-        // TU LLAVE DE SUPABASE YA INYECTADA
-        const supabaseKey = "sb_publishable_mOh12j1-IPGHglr__RrqRA_VrLym7U6";
+        // LLAVE CORREGIDA (CON EL NÚMERO CERO '0')
+        const supabaseKey = "sb_publishable_m0h12j1-IPGHglr__RrqRA_VrLym7U6";
 
         function abrirExness() {
             window.open('https://one.exnessonelink.com/a/3zrlq2qy7j?source=app', '_blank');
@@ -148,31 +148,27 @@
             const btnBinance = document.getElementById('btnBinance');
             let linkBinance = "";
             let idParaClave = "";
-            let exnessParaGuardar = "";
+            let exnessParaGuardar = partnerId || "SIN_EXNESS";
 
             if(partnerId.length > 0 && partnerId.length < 5) {
-                alert("Si tienes un ID de Exness, debe ser de 5 o más números. Si no tienes, déjalo en blanco.");
+                alert("ID de Exness inválido (mínimo 5 números).");
                 return;
             }
 
             if(partnerId.length >= 5) {
                 linkBinance = 'https://s.binance.com/4o8SyN8U';
                 idParaClave = partnerId;
-                exnessParaGuardar = partnerId; // Se guarda el ID real
             } else {
                 linkBinance = 'https://s.binance.com/64LsxwUb';
                 idParaClave = "GUEST-" + Math.floor(Math.random() * 9999);
-                exnessParaGuardar = "SIN_EXNESS"; // Para los que pagan full
             }
 
             const generatedKey = "XAU-" + btoa(idParaClave + SALT).substring(3, 13).toUpperCase();
             
             btnBinance.disabled = true;
-            status.innerText = "CREANDO LICENCIA EN EL SERVIDOR...";
-            status.style.color = "#fcc200";
+            status.innerText = "CONECTANDO CON SUPABASE...";
 
             try {
-                // GUARDAR EN SUPABASE: Licencia, Estado y Exness ID
                 const response = await fetch(supabaseUrl, {
                     method: 'POST',
                     headers: {
@@ -184,23 +180,21 @@
                     body: JSON.stringify({ 
                         codigo_licencia: generatedKey, 
                         estado: 'pendiente',
-                        exness_id: exnessParaGuardar
+                        exness_id: exnessParaGuardar,
+                        numero_cuenta: 'VACIÓ'
                     })
                 });
 
                 if(response.ok) {
                     navigator.clipboard.writeText(generatedKey);
                     document.getElementById('masterKey').value = generatedKey;
-
-                    alert("¡LICENCIA CREADA Y ASEGURADA!\n\nSe ha copiado: " + generatedKey + "\n\nSerás redirigido a Binance. Recuerda que la licencia está PENDIENTE hasta que confirmemos el pago.");
-                    
+                    alert("LICENCIA GENERADA: " + generatedKey + "\n\nSe ha copiado al portapapeles. Paga en Binance para que el admin la active.");
                     window.open(linkBinance, '_blank');
-                    status.innerText = "ESPERANDO CONFIRMACIÓN DE PAGO...";
                 } else {
-                    mostrarError("ERROR AL GUARDAR EN LA NUBE");
+                    mostrarError("ERROR EN RESPUESTA DE NUBE");
                 }
             } catch (e) {
-                mostrarError("ERROR DE RED AL CREAR LICENCIA");
+                mostrarError("FALLO DE CONEXIÓN");
             } finally {
                 btnBinance.disabled = false;
             }
@@ -211,17 +205,12 @@
             const status = document.getElementById('status');
             const btnActivar = document.getElementById('btnActivar');
 
-            if (typedKey === "") {
-                mostrarError("INGRESE UNA LICENCIA");
-                return;
-            }
+            if (!typedKey) return mostrarError("INGRESE LICENCIA");
 
             btnActivar.disabled = true;
-            status.innerText = "VERIFICANDO EN SUPABASE...";
-            status.style.color = "#fcc200";
+            status.innerText = "VERIFICANDO...";
 
             try {
-                // BUSCAR LA LLAVE EN SUPABASE
                 const response = await fetch(`${supabaseUrl}?codigo_licencia=eq.${typedKey}&select=*`, {
                     method: 'GET',
                     headers: {
@@ -233,25 +222,15 @@
                 const data = await response.json();
 
                 if (data.length === 0) {
-                    mostrarError("LICENCIA NO EXISTE");
+                    mostrarError("LICENCIA INVÁLIDA");
+                } else if (data[0].estado === 'activo') {
+                    localStorage.setItem("acceso_concedido", "true");
+                    window.location.href = "dashboard.html";
                 } else {
-                    const estadoLicencia = data[0].estado;
-
-                    if (estadoLicencia === 'pendiente') {
-                        mostrarError("PAGO NO CONFIRMADO. CONTACTE SOPORTE.");
-                    } else if (estadoLicencia === 'activo') {
-                        localStorage.setItem("acceso_concedido", "true");
-                        status.innerText = "ACCESO CONCEDIDO. CARGANDO...";
-                        status.style.color = "#00ff88";
-                        setTimeout(() => {
-                            window.location.href = "dashboard.html";
-                        }, 1000);
-                    } else {
-                        mostrarError("LICENCIA BLOQUEADA O EXPIRADA");
-                    }
+                    mostrarError("PAGO NO CONFIRMADO TODAVÍA");
                 }
             } catch (e) {
-                mostrarError("ERROR DE CONEXIÓN CON EL SERVIDOR");
+                mostrarError("ERROR DE RED");
             } finally {
                 btnActivar.disabled = false;
             }
@@ -261,7 +240,6 @@
             const s = document.getElementById('status');
             s.innerText = "❌ " + txt;
             s.style.color = "#f85149";
-            setTimeout(() => { s.innerText = ""; }, 4000);
         }
     </script>
 </body>
