@@ -55,6 +55,7 @@
         }
         .btn-main { background: var(--gold); color: #000; box-shadow: 0 4px 15px rgba(252, 194, 0, 0.2); }
         .btn-main:active { transform: scale(0.97); }
+        .btn:disabled { opacity: 0.5; cursor: not-allowed; }
         
         .btn-outline { background: transparent; color: #fff; border: 1px solid #fff; }
         .btn-binance { background: #F3BA2F; color: #000; }
@@ -83,7 +84,7 @@
             <div class="input-group">
                 <input type="text" id="masterKey" placeholder="PEGAR LICENCIA AQUÍ">
             </div>
-            <button class="btn btn-main" onclick="validarEntrada()">
+            <button class="btn btn-main" id="btnActivar" onclick="validarEntrada()">
                 <i class="fas fa-bolt"></i> ACTIVAR TERMINAL
             </button>
 
@@ -102,21 +103,24 @@
                 <div id="promoTxt">COSTO ANUAL USDT (BEP20)</div>
             </div>
 
-            <button class="btn btn-binance" onclick="generarYPagos()">
+            <button class="btn btn-binance" id="btnBinance" onclick="generarYPagos()">
                 <i class="fab fa-bitcoin"></i> 2. PAGAR CON BINANCE
             </button>
 
             <div id="status"></div>
             
-            <div class="footer-note">Seguridad de Acceso Activa</div>
+            <div class="footer-note">Filtro de Seguridad Supabase Activo</div>
         </div>
     </div>
 
     <script>
         const SALT = "GOLD_RADAR_2026_PRO";
+        const supabaseUrl = "https://gpoezpmciznhkwgsrcgo.supabase.co/rest/v1/Licencias";
+        
+        // TU LLAVE DE SUPABASE YA INYECTADA
+        const supabaseKey = "sb_publishable_mOh12j1-IPGHglr__RrqRA_VrLym7U6";
 
         function abrirExness() {
-            // Tu enlace de referido de Exness
             window.open('https://one.exnessonelink.com/a/3zrlq2qy7j?source=app', '_blank');
         }
 
@@ -138,59 +142,118 @@
             }
         }
 
-        function generarYPagos() {
-            const partnerId = document.getElementById('exnessID').value;
+        async function generarYPagos() {
+            const partnerId = document.getElementById('exnessID').value.trim();
             const status = document.getElementById('status');
+            const btnBinance = document.getElementById('btnBinance');
             let linkBinance = "";
             let idParaClave = "";
+            let exnessParaGuardar = "";
 
-            // DETECTOR DE PRECIO INTELIGENTE
-            if(partnerId.length >= 5) {
-                // TIENE DESCUENTO: Link de Binance de $44.50
-                linkBinance = 'https://s.binance.com/4o8SyN8U';
-                idParaClave = partnerId;
-            } else {
-                // NO TIENE DESCUENTO: Link de Binance de $89.00
-                linkBinance = 'https://s.binance.com/64LsxwUb';
-                idParaClave = "GUEST-" + Math.floor(Math.random() * 9999);
+            if(partnerId.length > 0 && partnerId.length < 5) {
+                alert("Si tienes un ID de Exness, debe ser de 5 o más números. Si no tienes, déjalo en blanco.");
+                return;
             }
 
-            // Generar clave secreta
+            if(partnerId.length >= 5) {
+                linkBinance = 'https://s.binance.com/4o8SyN8U';
+                idParaClave = partnerId;
+                exnessParaGuardar = partnerId; // Se guarda el ID real
+            } else {
+                linkBinance = 'https://s.binance.com/64LsxwUb';
+                idParaClave = "GUEST-" + Math.floor(Math.random() * 9999);
+                exnessParaGuardar = "SIN_EXNESS"; // Para los que pagan full
+            }
+
             const generatedKey = "XAU-" + btoa(idParaClave + SALT).substring(3, 13).toUpperCase();
             
-            // Copiar al portapapeles y guardar temporalmente
-            navigator.clipboard.writeText(generatedKey);
-            document.getElementById('masterKey').value = generatedKey;
-            localStorage.setItem("key_valida_actual", generatedKey);
-
-            alert("¡LICENCIA GENERADA!\n\nSe ha copiado: " + generatedKey + "\n\nSerás redirigido a Binance con el monto exacto a pagar.\nAl terminar, vuelve aquí y presiona 'ACTIVAR TERMINAL'.");
-            
-            // Abrir la pasarela de pago exacta (44.50 o 89.00)
-            window.open(linkBinance, '_blank');
-            
-            status.innerText = "ESPERANDO PAGO EN BINANCE...";
+            btnBinance.disabled = true;
+            status.innerText = "CREANDO LICENCIA EN EL SERVIDOR...";
             status.style.color = "#fcc200";
+
+            try {
+                // GUARDAR EN SUPABASE: Licencia, Estado y Exness ID
+                const response = await fetch(supabaseUrl, {
+                    method: 'POST',
+                    headers: {
+                        'apikey': supabaseKey,
+                        'Authorization': `Bearer ${supabaseKey}`,
+                        'Content-Type': 'application/json',
+                        'Prefer': 'return=minimal'
+                    },
+                    body: JSON.stringify({ 
+                        codigo_licencia: generatedKey, 
+                        estado: 'pendiente',
+                        exness_id: exnessParaGuardar
+                    })
+                });
+
+                if(response.ok) {
+                    navigator.clipboard.writeText(generatedKey);
+                    document.getElementById('masterKey').value = generatedKey;
+
+                    alert("¡LICENCIA CREADA Y ASEGURADA!\n\nSe ha copiado: " + generatedKey + "\n\nSerás redirigido a Binance. Recuerda que la licencia está PENDIENTE hasta que confirmemos el pago.");
+                    
+                    window.open(linkBinance, '_blank');
+                    status.innerText = "ESPERANDO CONFIRMACIÓN DE PAGO...";
+                } else {
+                    mostrarError("ERROR AL GUARDAR EN LA NUBE");
+                }
+            } catch (e) {
+                mostrarError("ERROR DE RED AL CREAR LICENCIA");
+            } finally {
+                btnBinance.disabled = false;
+            }
         }
 
-        function validarEntrada() {
-            const typedKey = document.getElementById('masterKey').value;
-            const validKey = localStorage.getItem("key_valida_actual");
+        async function validarEntrada() {
+            const typedKey = document.getElementById('masterKey').value.trim();
+            const status = document.getElementById('status');
+            const btnActivar = document.getElementById('btnActivar');
 
             if (typedKey === "") {
                 mostrarError("INGRESE UNA LICENCIA");
                 return;
             }
 
-            if (typedKey === validKey) {
-                localStorage.setItem("acceso_concedido", "true");
-                document.getElementById('status').innerText = "ACCESO CONCEDIDO. CARGANDO...";
-                document.getElementById('status').style.color = "#00ff88";
-                
-                setTimeout(() => {
-                    window.location.href = "dashboard.html";
-                }, 1000);
-            } else {
-                mostrarError("LICENCIA INVÁLIDA O NO PAGADA");
+            btnActivar.disabled = true;
+            status.innerText = "VERIFICANDO EN SUPABASE...";
+            status.style.color = "#fcc200";
+
+            try {
+                // BUSCAR LA LLAVE EN SUPABASE
+                const response = await fetch(`${supabaseUrl}?codigo_licencia=eq.${typedKey}&select=*`, {
+                    method: 'GET',
+                    headers: {
+                        'apikey': supabaseKey,
+                        'Authorization': `Bearer ${supabaseKey}`
+                    }
+                });
+
+                const data = await response.json();
+
+                if (data.length === 0) {
+                    mostrarError("LICENCIA NO EXISTE");
+                } else {
+                    const estadoLicencia = data[0].estado;
+
+                    if (estadoLicencia === 'pendiente') {
+                        mostrarError("PAGO NO CONFIRMADO. CONTACTE SOPORTE.");
+                    } else if (estadoLicencia === 'activo') {
+                        localStorage.setItem("acceso_concedido", "true");
+                        status.innerText = "ACCESO CONCEDIDO. CARGANDO...";
+                        status.style.color = "#00ff88";
+                        setTimeout(() => {
+                            window.location.href = "dashboard.html";
+                        }, 1000);
+                    } else {
+                        mostrarError("LICENCIA BLOQUEADA O EXPIRADA");
+                    }
+                }
+            } catch (e) {
+                mostrarError("ERROR DE CONEXIÓN CON EL SERVIDOR");
+            } finally {
+                btnActivar.disabled = false;
             }
         }
 
@@ -198,7 +261,7 @@
             const s = document.getElementById('status');
             s.innerText = "❌ " + txt;
             s.style.color = "#f85149";
-            setTimeout(() => { s.innerText = ""; }, 3000);
+            setTimeout(() => { s.innerText = ""; }, 4000);
         }
     </script>
 </body>
