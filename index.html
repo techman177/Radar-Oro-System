@@ -3,69 +3,186 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>RADAR DE ORO | ACCESO</title>
+    <title>RADAR DE ORO | ACCESO MAESTRO</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Poppins:wght@300;400&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
     <style>
-        :root { --gold: #fcc200; --bg: #050608; --success: #00ff88; }
-        * { box-sizing: border-box; margin: 0; padding: 0; }
-        body { background: var(--bg); font-family: 'Poppins', sans-serif; color: white; display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 20px; }
-        .glass-card { background: rgba(13, 17, 23, 0.95); padding: 30px; border-radius: 20px; border: 2px solid var(--gold); width: 100%; max-width: 400px; text-align: center; box-shadow: 0 0 30px rgba(252, 194, 0, 0.2); }
-        h1 { font-family: 'Orbitron'; color: var(--gold); font-size: 1.5rem; margin-bottom: 20px; }
+        :root { 
+            --gold: #fcc200; --bg: #050608; --card: #0d1117; 
+            --success: #00ff88; --danger: #f85149; 
+        }
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; margin: 0; padding: 0; }
+        body, html { width: 100%; min-height: 100%; background: var(--bg); font-family: 'Poppins', sans-serif; color: white; overflow-x: hidden; }
+        
+        .bg-overlay { 
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
+            background: linear-gradient(rgba(0,0,0,0.85), rgba(0,0,0,0.95)), 
+            url('https://images.unsplash.com/photo-1611974717482-58359234b1b6?q=80&w=2000'); 
+            background-size: cover; background-position: center; z-index: -1; 
+        }
+
+        .main-container { display: flex; justify-content: center; align-items: center; padding: 40px 20px; min-height: 100vh; }
+        
+        .glass-card { 
+            background: rgba(13, 17, 23, 0.95); padding: 35px 25px; border-radius: 25px; 
+            border: 2px solid var(--gold); width: 100%; max-width: 420px; 
+            box-shadow: 0 0 40px rgba(252, 194, 0, 0.15); text-align: center; 
+            backdrop-filter: blur(10px);
+        }
+
+        h1 { font-family: 'Orbitron'; font-size: 1.6rem; color: var(--gold); letter-spacing: 2px; margin-bottom: 5px; }
+        .tagline { font-family: 'Orbitron'; font-size: 0.65rem; color: #8b949e; margin-bottom: 30px; display: block; letter-spacing: 1px; }
+
+        .section-label { 
+            font-family: 'Orbitron'; font-size: 0.6rem; color: var(--gold); 
+            display: block; margin: 25px 0 10px; border-bottom: 1px solid #333; 
+            padding-bottom: 5px; text-transform: uppercase;
+        }
+
         .input-group { margin-bottom: 15px; }
-        input { width: 100%; padding: 15px; background: #000; border: 1px solid #333; border-radius: 10px; color: white; font-family: 'Orbitron'; text-align: center; outline: none; }
-        input:focus { border-color: var(--gold); }
-        .btn { width: 100%; padding: 16px; border-radius: 10px; font-family: 'Orbitron'; font-weight: bold; cursor: pointer; border: none; transition: 0.3s; margin-bottom: 10px; text-transform: uppercase; }
-        .btn-main { background: var(--gold); color: #000; }
-        .btn-binance { background: #F3BA2F; color: #000; font-size: 0.7rem; }
-        .price-box { background: rgba(255,255,255,0.05); padding: 15px; border-radius: 10px; border: 1px dashed #444; margin: 20px 0; }
-        #status { font-size: 12px; font-weight: bold; margin-top: 10px; min-height: 18px; }
+        input { 
+            width: 100%; padding: 15px; background: #000; border: 1px solid #333; 
+            border-radius: 12px; color: white; font-family: 'Orbitron'; 
+            font-size: 0.85rem; text-align: center; outline: none; transition: 0.3s; 
+        }
+        input:focus { border-color: var(--gold); box-shadow: 0 0 15px rgba(252,194,0,0.3); }
+
+        .btn { 
+            width: 100%; padding: 16px; border-radius: 12px; font-family: 'Orbitron'; 
+            font-size: 0.75rem; font-weight: bold; cursor: pointer; border: none; 
+            display: flex; align-items: center; justify-content: center; gap: 10px; 
+            transition: 0.3s; margin-bottom: 12px; text-transform: uppercase;
+        }
+        .btn-main { background: var(--gold); color: #000; box-shadow: 0 4px 15px rgba(252, 194, 0, 0.2); }
+        .btn-main:active { transform: scale(0.97); }
+        
+        .btn-outline { background: transparent; color: #fff; border: 1px solid #fff; }
+        .btn-binance { background: #F3BA2F; color: #000; }
+
+        .price-box { 
+            background: rgba(255,255,255,0.03); padding: 15px; border-radius: 12px; 
+            border: 1px dashed #444; margin: 20px 0; 
+        }
+        #priceTag { font-family: 'Orbitron'; font-size: 1.8rem; font-weight: bold; display: block; color: #fff; }
+        #promoTxt { font-family: 'Orbitron'; font-size: 0.55rem; color: #8b949e; margin-top: 5px; }
+
+        #status { font-family: 'Orbitron'; font-size: 0.65rem; margin-top: 15px; font-weight: bold; min-height: 15px; }
+        .footer-note { font-size: 10px; color: #555; margin-top: 20px; text-transform: uppercase; letter-spacing: 1px; }
     </style>
 </head>
 <body>
-    <div class="glass-card">
-        <h1>RADAR DE ORO</h1>
-        <div class="input-group">
-            <input type="text" id="masterKey" placeholder="PEGAR LICENCIA">
+
+    <div class="bg-overlay"></div>
+
+    <div class="main-container">
+        <div class="glass-card">
+            <h1>RADAR DE ORO</h1>
+            <span class="tagline">INTEGRATCORE ENGINE V1.5</span>
+
+            <span class="section-label">ACCESO AL SISTEMA</span>
+            <div class="input-group">
+                <input type="text" id="masterKey" placeholder="PEGAR LICENCIA AQUÍ">
+            </div>
+            <button class="btn btn-main" onclick="validarEntrada()">
+                <i class="fas fa-bolt"></i> ACTIVAR TERMINAL
+            </button>
+
+            <span class="section-label">ADQUIRIR LICENCIA NUEVA</span>
+            
+            <button class="btn btn-outline" onclick="window.open('https://www.exness.com/', '_blank')">
+                <i class="fas fa-external-link-alt"></i> 1. REGISTRO EN EXNESS
+            </button>
+            
+            <div class="input-group">
+                <input type="text" id="exnessID" placeholder="TU ID DE SOCIO EXNESS" oninput="chequearDescuento()">
+            </div>
+
+            <div class="price-box">
+                <span id="priceTag">$89.00</span>
+                <div id="promoTxt">COSTO ANUAL USDT (BEP20)</div>
+            </div>
+
+            <button class="btn btn-binance" onclick="generarYPagos()">
+                <i class="fab fa-bitcoin"></i> 2. PAGAR CON BINANCE
+            </button>
+
+            <div id="status"></div>
+            
+            <div class="footer-note">Seguridad de Acceso Activa</div>
         </div>
-        <button class="btn btn-main" onclick="validar()">ACTIVAR TERMINAL</button>
-        
-        <div class="price-box">
-            <input type="text" id="exID" placeholder="ID SOCIO EXNESS" oninput="promo()" style="margin-bottom:10px">
-            <span id="price" style="font-family:Orbitron; font-size:1.5rem">$89.00</span>
-        </div>
-        <button class="btn btn-binance" onclick="pagar()">PAGAR CON BINANCE</button>
-        <div id="status"></div>
     </div>
 
     <script>
-        function promo() {
-            const val = document.getElementById('exID').value;
-            document.getElementById('price').innerText = val.length >= 5 ? "$44.50" : "$89.00";
-            document.getElementById('price').style.color = val.length >= 5 ? "#00ff88" : "white";
-        }
+        const SALT = "GOLD_RADAR_2026_PRO";
 
-        function pagar() {
-            const id = document.getElementById('exID').value;
-            if(id.length < 5) return alert("Ingresa tu ID de Socio");
-            const key = "XAU-" + btoa(id + "GOLD").substring(0, 8).toUpperCase();
-            localStorage.setItem("key_temp", key);
-            document.getElementById('masterKey').value = key;
-            navigator.clipboard.writeText(key);
-            alert("Licencia copiada. Paga en Binance y luego presiona Activar.");
-            window.open('https://www.binance.com/es/my/wallet/account/main/withdrawal/crypto/USDT', '_blank');
-        }
-
-        function validar() {
-            const typed = document.getElementById('masterKey').value;
-            const valid = localStorage.getItem("key_temp");
-            if(typed && typed === valid) {
-                localStorage.setItem("acceso_concedido", "true");
-                window.location.href = "dashboard.html";
+        function chequearDescuento() {
+            const id = document.getElementById('exnessID').value;
+            const price = document.getElementById('priceTag');
+            const promo = document.getElementById('promoTxt');
+            
+            if(id.length >= 5) {
+                price.innerText = "$44.50";
+                price.style.color = "#00ff88";
+                promo.innerText = "¡CUPÓN DE SOCIO APLICADO (50% OFF)!";
+                promo.style.color = "#00ff88";
             } else {
-                document.getElementById('status').innerText = "❌ LICENCIA INVÁLIDA";
-                document.getElementById('status').style.color = "#ff4444";
+                price.innerText = "$89.00";
+                price.style.color = "white";
+                promo.innerText = "COSTO ANUAL USDT (BEP20)";
+                promo.style.color = "#8b949e";
             }
+        }
+
+        function generarYPagos() {
+            const partnerId = document.getElementById('exnessID').value;
+            const status = document.getElementById('status');
+
+            if(partnerId.length < 5) {
+                alert("Por favor, ingresa tu ID de Socio de Exness para validar.");
+                return;
+            }
+
+            const generatedKey = "XAU-" + btoa(partnerId + SALT).substring(3, 13).toUpperCase();
+            
+            navigator.clipboard.writeText(generatedKey);
+            document.getElementById('masterKey').value = generatedKey;
+            localStorage.setItem("key_valida_actual", generatedKey);
+
+            alert("¡LICENCIA GENERADA!\n\nSe ha copiado: " + generatedKey + "\n\nProcede al pago en Binance y luego presiona 'ACTIVAR TERMINAL'.");
+            window.open('https://www.binance.com/es/my/wallet/account/main/withdrawal/crypto/USDT', '_blank');
+            
+            status.innerText = "ESPERANDO PAGO EN BINANCE...";
+            status.style.color = "#fcc200";
+        }
+
+        function validarEntrada() {
+            const typedKey = document.getElementById('masterKey').value;
+            const validKey = localStorage.getItem("key_valida_actual");
+
+            if (typedKey === "") {
+                mostrarError("INGRESE UNA LICENCIA");
+                return;
+            }
+
+            if (typedKey === validKey) {
+                localStorage.setItem("acceso_concedido", "true");
+                document.getElementById('status').innerText = "ACCESO CONCEDIDO. CARGANDO...";
+                document.getElementById('status').style.color = "#00ff88";
+                
+                // Redirección asegurada en minúsculas
+                setTimeout(() => {
+                    window.location.href = "dashboard.html";
+                }, 1000);
+            } else {
+                mostrarError("LICENCIA INVÁLIDA O NO PAGADA");
+            }
+        }
+
+        function mostrarError(txt) {
+            const s = document.getElementById('status');
+            s.innerText = "❌ " + txt;
+            s.style.color = "#f85149";
+            setTimeout(() => { s.innerText = ""; }, 3000);
         }
     </script>
 </body>
