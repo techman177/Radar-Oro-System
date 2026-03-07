@@ -89,7 +89,7 @@
 
             <span class="section-label">ADQUIRIR LICENCIA NUEVA</span>
             
-            <button class="btn btn-outline" onclick="window.open('https://www.exness.com/', '_blank')">
+            <button class="btn btn-outline" onclick="abrirExness()">
                 <i class="fas fa-external-link-alt"></i> 1. REGISTRO EN EXNESS
             </button>
             
@@ -115,6 +115,11 @@
     <script>
         const SALT = "GOLD_RADAR_2026_PRO";
 
+        function abrirExness() {
+            // Tu enlace de referido de Exness
+            window.open('https://one.exnessonelink.com/a/3zrlq2qy7j?source=app', '_blank');
+        }
+
         function chequearDescuento() {
             const id = document.getElementById('exnessID').value;
             const price = document.getElementById('priceTag');
@@ -136,20 +141,32 @@
         function generarYPagos() {
             const partnerId = document.getElementById('exnessID').value;
             const status = document.getElementById('status');
+            let linkBinance = "";
+            let idParaClave = "";
 
-            if(partnerId.length < 5) {
-                alert("Por favor, ingresa tu ID de Socio de Exness para validar.");
-                return;
+            // DETECTOR DE PRECIO INTELIGENTE
+            if(partnerId.length >= 5) {
+                // TIENE DESCUENTO: Link de Binance de $44.50
+                linkBinance = 'https://s.binance.com/4o8SyN8U';
+                idParaClave = partnerId;
+            } else {
+                // NO TIENE DESCUENTO: Link de Binance de $89.00
+                linkBinance = 'https://s.binance.com/64LsxwUb';
+                idParaClave = "GUEST-" + Math.floor(Math.random() * 9999);
             }
 
-            const generatedKey = "XAU-" + btoa(partnerId + SALT).substring(3, 13).toUpperCase();
+            // Generar clave secreta
+            const generatedKey = "XAU-" + btoa(idParaClave + SALT).substring(3, 13).toUpperCase();
             
+            // Copiar al portapapeles y guardar temporalmente
             navigator.clipboard.writeText(generatedKey);
             document.getElementById('masterKey').value = generatedKey;
             localStorage.setItem("key_valida_actual", generatedKey);
 
-            alert("¡LICENCIA GENERADA!\n\nSe ha copiado: " + generatedKey + "\n\nProcede al pago en Binance y luego presiona 'ACTIVAR TERMINAL'.");
-            window.open('https://www.binance.com/es/my/wallet/account/main/withdrawal/crypto/USDT', '_blank');
+            alert("¡LICENCIA GENERADA!\n\nSe ha copiado: " + generatedKey + "\n\nSerás redirigido a Binance con el monto exacto a pagar.\nAl terminar, vuelve aquí y presiona 'ACTIVAR TERMINAL'.");
+            
+            // Abrir la pasarela de pago exacta (44.50 o 89.00)
+            window.open(linkBinance, '_blank');
             
             status.innerText = "ESPERANDO PAGO EN BINANCE...";
             status.style.color = "#fcc200";
@@ -169,7 +186,6 @@
                 document.getElementById('status').innerText = "ACCESO CONCEDIDO. CARGANDO...";
                 document.getElementById('status').style.color = "#00ff88";
                 
-                // Redirección asegurada en minúsculas
                 setTimeout(() => {
                     window.location.href = "dashboard.html";
                 }, 1000);
